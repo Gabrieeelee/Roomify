@@ -1,5 +1,6 @@
 package com.Roomify;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,22 +17,28 @@ public class Beb extends Struttura{
     }
 
     //Inserimento della stanza caso d'uso 1
-    public void inserisciStanza(String nome,int nospiti, float prezzopernotte, int dimensione,String descrizione, ArrayList<Integer> listacodservizi){
-        ArrayList<Servizio> listaserv = new ArrayList<>();
-        if (listacodservizi.size() != 0){
-            System.out.println("Non si sono selezionati i servizi");
-            HashMap<Integer, Servizio> servizi = Roomify.getInstance().getServizi();
-            for (int i = 0; i < listacodservizi.size(); i++) {
-                listaserv.add(servizi.get(listacodservizi.get(i)));
-               // System.out.println(servizi.get(listacodservizi.get(i)).getNome());
-            }
-        }
-        listaStanze.put(nome, new Stanza(nome, nospiti, prezzopernotte, dimensione, descrizione, listaserv));
+    public Stanza inserisciStanza(int id,String nome,int nospiti, float prezzopernotte, int dimensione,String descrizione, ArrayList<Servizio> listaServizi){
+        Stanza st=new Stanza(id,nome, nospiti, prezzopernotte, dimensione, descrizione, listaServizi);
+        listaStanze.put(nome, st);
         System.out.println("Inserimento stanza: "+ nome +"-> completato!");
+        return st;
     }
 
     public Map<String, Stanza> getListaStanze() {
         return listaStanze;
+    }
+
+    public ArrayList<Stanza> isAvaible(LocalDate dataInizio, LocalDate dataFine, int nOspiti) {
+
+        ArrayList<Stanza> listStanzeDisp = new ArrayList<>();
+        Map<String, Stanza> stnBeb =  this.getListaStanze();
+        for (Stanza stanza : stnBeb.values()) {
+            Stanza sv = stanza.isAvailable(dataInizio, dataFine, nOspiti);
+            if (sv != null) {
+                listStanzeDisp.add(sv);
+            }
+        }
+        return listStanzeDisp;
     }
 
 }
