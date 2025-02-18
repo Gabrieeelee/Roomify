@@ -8,8 +8,10 @@ public class Utente {
     private String codicefiscale;
     private String email;
     private String telefono;
+    private int id;
 
-    public Utente(String nome, String cognome, LocalDate dataDiNascita, String codicefiscale, String email, String telefono) {
+    public Utente(int id,String nome, String cognome, LocalDate dataDiNascita, String codicefiscale, String email, String telefono) {
+        this.id = id;
         this.nome = nome;
         this.cognome = cognome;
         this.dataDiNascita = dataDiNascita;
@@ -18,5 +20,7 @@ public class Utente {
         this.telefono = telefono;
     }
 
-
+    public int getId() {
+        return id;
+    }
 }

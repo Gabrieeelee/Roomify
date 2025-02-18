@@ -22,4 +22,5 @@ public class Servizio {
     public String getDescrizione() {
         return descrizione;
     }
+
 }

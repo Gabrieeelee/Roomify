@@ -13,8 +13,9 @@ public class Stanza implements PrenotazioniObserve {
     private String descrizione;
     private ArrayList<Servizio> listaservizi;
     private Map<Integer,Prenotazione> listaprenotazioni;
+    private Beb beb;
 
-    public Stanza(int id,String nome, int nospiti, float prezzopernotte, int dimensione, String descrizione, ArrayList<Servizio> listaservizi) {
+    public Stanza(int id,String nome, int nospiti, float prezzopernotte, int dimensione, String descrizione, ArrayList<Servizio> listaservizi, Beb beb) {
         this.id = id;
         this.nome = nome;
         this.nospiti = nospiti;
@@ -23,6 +24,7 @@ public class Stanza implements PrenotazioniObserve {
         this.descrizione = descrizione;
         this.listaservizi = listaservizi;
         this.listaprenotazioni = new HashMap<>();
+        this.beb = beb;
     }
 
     public String getNome() {
@@ -62,24 +64,13 @@ public class Stanza implements PrenotazioniObserve {
     }
 
 
-    public void aggiorna(Map<Integer, Prenotazione> listaprenotazioni) {
-        Map<Integer,Prenotazione> listaaggiornata=new HashMap<>();
-        for(Prenotazione pren: listaprenotazioni.values()){
-            if(pren.getStanza() == this ){
-                listaaggiornata.put(pren.getId(), pren);
+    public void aggiorna(Prenotazione pren) {
+        if(pren.getStanza()==this) {
+            listaprenotazioni.put(pren.getId(), pren);
             }
-        }
-        this.listaprenotazioni = new HashMap<>(listaaggiornata);
-       /* System.out.println("lista aggiornata contenente solo le prenotazioni di stanza "+ this.id);
-        for(Prenotazione pren: listaaggiornata.values()){
-            System.out.println("Prenotazione id "+pren.getId()+ "riguardante la stanza "+pren.getStanza().getId());
-        }
-
-        System.out.println("Lista prenotazioni aggiornata in Stanza.");
-        for(Prenotazione pren: listaprenotazioni.values()){
-           // System.out.println("Prenotazione per stanza "+this.id+" "+this.nome+"con id: "+pren.getId()+" riguardante la stanza "+ pren.getStanza().getId());
-        }*/
     }
+
+
 
     public void addPrenotazione(Prenotazione pre){
         listaprenotazioni.put(pre.getId(),pre);
@@ -112,6 +103,7 @@ public class Stanza implements PrenotazioniObserve {
         }
         return null;
     }
+
 
 
 }

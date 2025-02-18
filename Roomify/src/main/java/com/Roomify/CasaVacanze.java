@@ -16,8 +16,9 @@ public class CasaVacanze extends Struttura implements PrenotazioniObserve {
     private Map<Integer,Prenotazione> listaprenotazioni;
 
 
-    public CasaVacanze(int id, String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo, int nMaxOspiti, int nVani, float prezzoNotte, int dimensione, ArrayList<Servizio> listaServizi) {
-        super(id, nome, descrizione, paese, citta, provincia, cap, indirizzo);
+
+    public CasaVacanze(int id, String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo, int nMaxOspiti, int nVani, float prezzoNotte, int dimensione, ArrayList<Servizio> listaServizi,Host proprietario) {
+        super(id, nome, descrizione, paese, citta, provincia, cap, indirizzo,proprietario);
         this.nMaxOspiti = nMaxOspiti;
         this.nVani = nVani;
         this.prezzoNotte = prezzoNotte;
@@ -61,17 +62,15 @@ public class CasaVacanze extends Struttura implements PrenotazioniObserve {
     }
 
 
-    public void aggiorna(Map<Integer, Prenotazione> listaprenotazioni) {
-        Map<Integer,Prenotazione> listaaggiornata=new HashMap<>();
-        for(Prenotazione prenotazione : listaprenotazioni.values()) {
+    public void aggiorna(Prenotazione prenotazione) {
             if(prenotazione.getStruttu() instanceof CasaVacanze){
                 if (prenotazione.getStruttu().getId() == this.getId()) {
-                    listaaggiornata.put(prenotazione.getId(), prenotazione);
+                    listaprenotazioni.put(prenotazione.getId(), prenotazione);
                 }
             }
         }
-        this.listaprenotazioni = new HashMap<>(listaaggiornata);
 
-    }
+
+
 
 }

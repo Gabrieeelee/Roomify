@@ -95,4 +95,17 @@ public class Prenotazione {
     public Struttura getStruttu() {
         return struttu;
     }
+
+    @Override
+    public String toString() {
+        return "Prenotazione{" +
+                "id=" + id +
+                ", datainizio=" + datainizio +
+                ", datafine=" + datafine +
+                ", stato='" + stato + '\'' +
+                ", st=" + st +
+                ", cl=" + cl +
+                ", struttu=" + struttu +
+                '}';
+    }
 }
