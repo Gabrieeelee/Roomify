@@ -20,11 +20,11 @@ public class Roomify {
     private Map<Integer,Utente> listaUtenti=new HashMap<>();
     private Utente utenteCorrente;
     private ArrayList<Abbonamento> listaAbbonamneto;
+    private Struttura strutturascelta;
 
     private Roomify() {
         this.mapStrutture = new HashMap<>();
         this.listaprenotazioni = new HashMap<>();
-
         populate();
     }
 
@@ -64,51 +64,51 @@ public class Roomify {
         ArrayList<Integer> listcod2 = new ArrayList<>(Arrays.asList(2, 3, 5, 7));
 
         login(listaUtenti.get(4));
-        inserisciCasavacanza(1, "Villa Sole", "Splendida villa con piscina e vista mare.", "Italia", "Palermo", "PA", 90100, "Via Roma, 10", 6, 4, 120.50f, 150, listcod1 );
+        inserisciCasavacanza( "Villa Sole", "Splendida villa con piscina e vista mare.", "Italia", "Palermo", "PA", 90100, "Via Roma, 10", 6, 4, 120.50f, 150, listcod1 );
         confermaCasaVacanze();
         logout();
 
         login(listaUtenti.get(2));
-        inserisciCasavacanza(2, "Casa Luna", "Accogliente casa nel centro storico", "Italia", "Roma", "RM", 00100, "Via dei Fori, 5", 4, 3, 80.00f, 90, listcod2);
+        inserisciCasavacanza( "Casa Luna", "Accogliente casa nel centro storico", "Italia", "Roma", "RM", 00100, "Via dei Fori, 5", 4, 3, 80.00f, 90, listcod2);
         confermaCasaVacanze();
 
-        inserisciCasavacanza(3, "Villa Aurora", "Villa di lusso con ampio giardino", "Italia", "Milano", "MI", 20100, "Corso Magenta, 25", 8, 5, 200.00f, 180, listcod1);
+        inserisciCasavacanza( "Villa Aurora", "Villa di lusso con ampio giardino", "Italia", "Milano", "MI", 20100, "Corso Magenta, 25", 8, 5, 200.00f, 180, listcod1);
        confermaCasaVacanze();
         logout();
 
         login(listaUtenti.get(6));
-        inserisciBeB(4, "La Dolce Mela", "Un bellissimo B&B immerso nel verde", "Italia", "Taormina", "Messina", 98034, "Via Mazzini 12");
-        inserisciStanza(1, "Camera Standard", 2, 60, 100, "Camera economica e accogliente", listcod1);
-        inserisciStanza(2, "Camera Deluxe", 4, 100, 150, "Camera spaziosa e confortevole", listcod2);
-        inserisciStanza(3, "Suite Panoramica", 3, 140, 200, "Vista mozzafiato sulla città", listcod1);
+        inserisciBeB( "La Dolce Mela", "Un bellissimo B&B immerso nel verde", "Italia", "Taormina", "Messina", 98034, "Via Mazzini 12");
+        inserisciStanza( "Camera Standard", 2, 60, 100, "Camera economica e accogliente", listcod1);
+        inserisciStanza( "Camera Deluxe", 4, 100, 150, "Camera spaziosa e confortevole", listcod2);
+        inserisciStanza( "Suite Panoramica", 3, 140, 200, "Vista mozzafiato sulla città", listcod1);
         confermaBeB();
 
-        inserisciBeB(8, "La Dolce pera", "Un bellissimo B&B immerso nel verde", "Italia", "Taormina", "Messina", 98034, "Via Mazzini 12");
-        inserisciStanza(1, " Standard", 2, 60, 100, "Camera economica e accogliente", listcod1);
-        inserisciStanza(2, " Deluxe", 4, 100, 150, "Camera spaziosa e confortevole", listcod2);
-        inserisciStanza(3, " Panoramica", 3, 140, 200, "Vista mozzafiato sulla città", listcod1);
+        inserisciBeB( "La Dolce pera", "Un bellissimo B&B immerso nel verde", "Italia", "Taormina", "Messina", 98034, "Via Mazzini 12");
+        inserisciStanza( " Standard", 2, 60, 100, "Camera economica e accogliente", listcod1);
+        inserisciStanza( " Deluxe", 4, 100, 150, "Camera spaziosa e confortevole", listcod2);
+        inserisciStanza( " Panoramica", 3, 140, 200, "Vista mozzafiato sulla città", listcod1);
         confermaBeB();
 
-        inserisciBeB(5, "B&B Il Glicine", "Struttura romantica con colazione inclusa", "Italia", "Firenze", "FI", 50100, "Piazza della Signoria 7");
-        inserisciStanza(1, "Suite Elegance", 3, 120, 180, "Camera lussuosa con vista panoramica", listcod1);
-        inserisciStanza(2, "Camera Comfort", 3, 75, 110, "Perfetta per il relax", listcod2);
-        inserisciStanza(3, "Junior Suite", 5, 140, 210, "Ampia suite con tutti i comfort", listcod1);
-        inserisciStanza(4, "Mansarda Deluxe", 4, 110, 170, "Elegante mansarda con terrazza", listcod2);
+        inserisciBeB( "B&B Il Glicine", "Struttura romantica con colazione inclusa", "Italia", "Firenze", "FI", 50100, "Piazza della Signoria 7");
+        inserisciStanza( "Suite Elegance", 3, 120, 180, "Camera lussuosa con vista panoramica", listcod1);
+        inserisciStanza( "Camera Comfort", 3, 75, 110, "Perfetta per il relax", listcod2);
+        inserisciStanza( "Junior Suite", 5, 140, 210, "Ampia suite con tutti i comfort", listcod1);
+        inserisciStanza( "Mansarda Deluxe", 4, 110, 170, "Elegante mansarda con terrazza", listcod2);
         confermaBeB();
         logout();
 
         login(listaUtenti.get(8));
-        inserisciBeB(6, "B&B Sole e Mare", "Perfetto per chi ama il mare", "Italia", "Napoli", "NA", 80100, "Via Caracciolo 21");
-        inserisciStanza(1, "Camera Marina", 3, 85, 130, "Camera con vista mare", listcod1);
-        inserisciStanza(2, "Camera Blue", 4, 95, 140, "Camera con colori rilassanti", listcod2);
-        inserisciStanza(3, "Penthouse Suite", 5, 200, 250, "Suite esclusiva con terrazza privata", listcod1);
+        inserisciBeB( "B&B Sole e Mare", "Perfetto per chi ama il mare", "Italia", "Napoli", "NA", 80100, "Via Caracciolo 21");
+        inserisciStanza( "Camera Marina", 3, 85, 130, "Camera con vista mare", listcod1);
+        inserisciStanza( "Camera Blue", 4, 95, 140, "Camera con colori rilassanti", listcod2);
+        inserisciStanza( "Penthouse Suite", 5, 200, 250, "Suite esclusiva con terrazza privata", listcod1);
         confermaBeB();
 
-        inserisciBeB(7, "B&B Il Bosco", "Circondato dal verde per un totale relax", "Italia", "Torino", "TO", 10100, "Strada del Bosco 45");
-        inserisciStanza(1, "Camera Rustica", 3, 70, 120, "Camera con arredamento rustico", listcod1);
-        inserisciStanza(2, "Camera Family", 4, 90, 150, "Perfetta per famiglie numerose", listcod2);
-        inserisciStanza(3, "Suite Romantica", 5, 130, 190, "Suite perfetta per coppie", listcod1);
-        inserisciStanza(4, "Loft Moderno", 4, 115, 175, "Ampio loft con arredamento moderno", listcod2);
+        inserisciBeB( "B&B Il Bosco", "Circondato dal verde per un totale relax", "Italia", "Torino", "TO", 10100, "Strada del Bosco 45");
+        inserisciStanza( "Camera Rustica", 3, 70, 120, "Camera con arredamento rustico", listcod1);
+        inserisciStanza( "Camera Family", 4, 90, 150, "Perfetta per famiglie numerose", listcod2);
+        inserisciStanza( "Suite Romantica", 5, 130, 190, "Suite perfetta per coppie", listcod1);
+        inserisciStanza( "Loft Moderno", 4, 115, 175, "Ampio loft con arredamento moderno", listcod2);
         confermaBeB();
         logout();
 
@@ -124,23 +124,30 @@ public class Roomify {
         selezionaStanza(1, st1);
         confermaPrenotazione();
 
-        ArrayList<Struttura> listaDisp11 = prenotaAlloggio("Taormina", LocalDate.of(2025, 5, 10), LocalDate.of(2025, 6, 13), 2);
+        //la ricerca funziona ma la struttura scelta non rispecchia la ricerca -- prima era Taormina
+        ArrayList<Struttura> listaDisp11 = prenotaAlloggio("Torino", LocalDate.of(2025, 5, 10), LocalDate.of(2025, 6, 13), 2);
         Struttura st11 = selezionaStruttura(8);
         selezionaStanza(1, st11);
         confermaPrenotazione();
+        stcorrente = st11;
+        inserisciRecensione(3, "CIAO GAB <3");
+        stcorrente = null;
 
         ArrayList<Struttura> listaDisp111 = prenotaAlloggio("Taormina", LocalDate.of(2026, 5, 10), LocalDate.of(2026, 6, 13), 2);
         Struttura st111 = selezionaStruttura(4);
         selezionaStanza(1, st111);
         confermaPrenotazione();
+        cliente3.addRecensione(new Recensione(1, 3, "CIAO st1", cliente3, st1));
+
         logout();
 
         // Prenotazione per un B&B a Firenze
         login(cliente2);
-        ArrayList<Struttura> listaDisp2 =prenotaAlloggio("Firenze", LocalDate.of(2025, 7, 1), LocalDate.of(2025, 7, 15), 3);
+        ArrayList<Struttura> listaDisp2 =prenotaAlloggio("Firenze", LocalDate.of(2020, 7, 1), LocalDate.of(2020, 7, 15), 3);
         Struttura st2 = selezionaStruttura(5);
         selezionaStanza(2, st2);
         confermaPrenotazione();
+        cliente3.addRecensione(new Recensione(2, 3, "CIAO st2", cliente3, st2));
         logout();
 
         // Prenotazione per un B&B a Napoli
@@ -149,17 +156,21 @@ public class Roomify {
         Struttura st3 = selezionaStruttura(6);
         selezionaStanza(3, st3);
         confermaPrenotazione();
+        //cliente3.addRecensione(new Recensione(3, 3, "CIAO st3", cliente3, st3));
+
         logout();
 
         // Prenotazione per un B&B a Torino
         login(cliente4);
         ArrayList<Struttura> listaDisp4 = prenotaAlloggio("Torino", LocalDate.of(2025, 9, 10), LocalDate.of(2025, 9, 20), 4);
-        Struttura st4 = selezionaStruttura(7);
-        selezionaStanza(4, st4);
+        Struttura st4 = selezionaStruttura(8);
+        selezionaStanza(3, st4);
         confermaPrenotazione();
+        stcorrente = st4;
+        inserisciRecensione(3, "CIAO");
+        stcorrente = null;
         logout();
     }
-
 
     public static Roomify getInstance() {
         if (roomify == null)
@@ -170,34 +181,61 @@ public class Roomify {
         return roomify;
     }
 
-//UC1
-    public void inserisciBeB(int id, String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo){
-        this.bebcorrente = new Beb(id,nome, descrizione, paese, citta, provincia, cap, indirizzo,((Host)utenteCorrente));
-        System.out.println("B&B inserito nella struttura corrente");
+//UC1 GESTIONE STRUTTURA
+    public void inserisciBeB( String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo){
+        int id=generaidStruttura();
+        int trovato=0;
+        if(mapStrutture.size()!=0) {
+            for(Struttura str: mapStrutture.values()) {
+                if (str.getNome().equals(nome) && str.getPaese().equals(paese) && str.getCitta().equals(citta) && str.getProvincia().equals(provincia) && str.getIndirizzo().equals(indirizzo)) {
+                    trovato=1;
+                    System.out.println("La struttura è già presente nel sistema");
+                    break;
+                }
+            }
+            if(trovato==0) {
+                this.bebcorrente = new Beb(id, nome, descrizione, paese, citta, provincia, cap, indirizzo, ((Host) utenteCorrente));
+                System.out.println("B&B inserito nella struttura corrente");
+            }
+        } else{
+            this.bebcorrente = new Beb(id, nome, descrizione, paese, citta, provincia, cap, indirizzo, ((Host) utenteCorrente));
+            System.out.println("B&B inserito nella struttura corrente");
+        }
     }
 
-    public void inserisciCasavacanza(int id, String nome, String descrizione, String paese, String citta, String provincia, int  cap, String indirizzo,int nMaxOspiti, int nVani, float prezzoNotte, int dimensione, ArrayList<Integer> listaCodServizi){
-        CasaVacanze cv=new CasaVacanze(id, nome, descrizione, paese, citta, provincia, cap, indirizzo, nMaxOspiti, nVani, prezzoNotte, dimensione, getServices(listaCodServizi),((Host)utenteCorrente));
-        this.cvcorrente=cv;
-        System.out.println("Casa Vacanza inserita nella struttura corrente");
-        aggiungiOsservatore(cv);
+    public void inserisciCasavacanza( String nome, String descrizione, String paese, String citta, String provincia, int  cap, String indirizzo,int nMaxOspiti, int nVani, float prezzoNotte, int dimensione, ArrayList<Integer> listaCodServizi){
+        int id=generaidStruttura();
+        int trovato=0;
+        if(mapStrutture.size()!=0) {
+            for (Struttura str : mapStrutture.values()) {
+                    if (str.getNome().equals(nome) && str.getPaese().equals(paese) && str.getCitta().equals(citta) && str.getProvincia().equals(provincia) && str.getIndirizzo().equals(indirizzo)) {
+                        trovato=1;
+                        System.out.println("La struttura è già presente nel sistema");
+                        break;
+                    }
+            }
+            if(trovato==0){
+                    CasaVacanze cv = new CasaVacanze(id, nome, descrizione, paese, citta, provincia, cap, indirizzo, nMaxOspiti, nVani, prezzoNotte, dimensione, getServices(listaCodServizi), ((Host) utenteCorrente));
+                    this.cvcorrente = cv;
+                    System.out.println("Casa Vacanza inserita nella struttura corrente");
+                    aggiungiOsservatore(cv);
+            }
+        } else {
+            CasaVacanze cv = new CasaVacanze(id, nome, descrizione, paese, citta, provincia, cap, indirizzo, nMaxOspiti, nVani, prezzoNotte, dimensione, getServices(listaCodServizi), ((Host) utenteCorrente));
+            this.cvcorrente = cv;
+            System.out.println("Casa Vacanza inserita nella struttura corrente");
+            aggiungiOsservatore(cv);
+        }
     }
-/*
-    public void inserisciTariffa(String nome, int periodo, float fattoreMoltiplicativo){
-        if(bebcorrente != null){
 
-        }else if(c/*vcorrente != null){
-
-        }else { System.out.println("Struttura non inizializzata");}
-    }*/
-
-    public void inserisciStanza(int id,String nome,int nospiti, float prezzopernotte, int dimensione,String descrizione, ArrayList<Integer> listacodservizi){
+    public void inserisciStanza(String nome,int nospiti, float prezzopernotte, int dimensione,String descrizione, ArrayList<Integer> listacodservizi){
+        int id=generaidStanza();
         if(bebcorrente != null){
             Stanza st=this.bebcorrente.inserisciStanza(id,nome,nospiti,prezzopernotte,dimensione,descrizione,getServices(listacodservizi),bebcorrente);
             aggiungiOsservatore(st);
             System.out.println("Stanza inserita in beb"+bebcorrente.getNome());
         }else{
-            System.out.println("Struttura non inizializzata");
+            System.out.println("Devi prima inserire un B&B");
         }
     }
 
@@ -206,6 +244,8 @@ public class Roomify {
         Map<Integer,Struttura> listastru=((Host)utenteCorrente).getListaStrutture();
         listastru.put(cvcorrente.getId(),cvcorrente);
         ((Host)utenteCorrente).setListaStrutture(listastru);
+        cvcorrente=null;
+        stcorrente=null;
     }
 
     public void confermaBeB(){
@@ -214,9 +254,10 @@ public class Roomify {
         listastru.put(bebcorrente.getId(),bebcorrente);
         ((Host)utenteCorrente).setListaStrutture(listastru);
         bebcorrente=null;
+        stcorrente=null;
     }
 
-    //UC2
+//UC2 GESTIONE PRENOTAZIONE ALLOGGIO
     public ArrayList<Struttura> prenotaAlloggio(String città, LocalDate dataInizio, LocalDate dataFine, int nOspiti) {
         corrDataFine = dataFine;
         corrDataInizio = dataInizio;
@@ -247,10 +288,10 @@ public class Roomify {
         return listaStruCorrenteDisp;
     }
 
-
     public Struttura selezionaStruttura(int id){
        for (Struttura st : mapStrutture.values()){
            if (st.getId() == id){
+               strutturascelta=st;
                if(st instanceof CasaVacanze) {
                    pre= new Prenotazione();
                    pre.setId(generaNumeroPrenotazione());
@@ -266,10 +307,9 @@ public class Roomify {
        return null;
     }
 
-
     public void selezionaStanza(int id, Struttura str){
-        if (str instanceof Beb){
-            ArrayList<Stanza> st = ((Beb)str).isAvaible(corrDataInizio, corrDataFine, corrNumOspiti);
+        if (strutturascelta instanceof Beb){
+            ArrayList<Stanza> st = ((Beb)strutturascelta).isAvaible(corrDataInizio, corrDataFine, corrNumOspiti);
             for(int i = 0; i < st.size(); i++){
                 if (st.get(i).getId() == id){
                     pre= new Prenotazione();
@@ -285,8 +325,6 @@ public class Roomify {
         }
     }
 
-
-
     public void confermaPrenotazione(){
         if(pre!=null){
             pre.setStato("Prenotato");
@@ -299,14 +337,7 @@ public class Roomify {
         }
     }
 
-    public void logout() {
-        utenteCorrente = null;
-    }
-
-    public void setUtenteCorrente(Utente utenteCorrente) {
-        this.utenteCorrente = utenteCorrente;
-    }
-//UC3
+//UC3 VISUALIZZA PRENOTAZIONI STRUTTURA
     public void visualizzaPrenotazioni(){
         for(Struttura struttura : ((Host)utenteCorrente).getListaStrutture().values()){
             System.out.println(struttura.toString());
@@ -329,7 +360,7 @@ public class Roomify {
         }
     }
 
-    //UC4
+//UC4 VISUALIZZA PRENOTAZIONI EFFETTUATE
     public Map<Integer, Utente> getListaUtenti() {
         return listaUtenti;
     }
@@ -346,7 +377,7 @@ public class Roomify {
         }
     }
 
-    //UC5
+//UC5 GESTIONE ANNULLAMENTO PRENOTAZIONE
     public Map<Integer, Prenotazione> annullaPrenotazione(){
         return ((Cliente)utenteCorrente).getListaPrenotazioniClienti();
     }
@@ -361,12 +392,22 @@ public class Roomify {
         }
     }
 
-    //UC6
+//UC6 RECENSIONE STRUTTURA
     public Map<Integer, Struttura> nuovaRecensione(){
        Map<Integer, Struttura> listStruRecensibili = new HashMap<>();
+       int trovato=0;
         for (Prenotazione pre: ((Cliente) utenteCorrente).getListaPrenotazioniClienti().values()){
-            if (LocalDate.now().isAfter(pre.getDatafine())){
-                listStruRecensibili.put(pre.getStruttu().getId(), pre.getStruttu());
+            ArrayList<Recensione> listRec= ((Cliente)utenteCorrente).getListaRecensioni();
+            if ((LocalDate.now().isAfter(pre.getDatafine()))){
+                for(int i=0;i<listRec.size();i++){
+                    if(pre.getStruttu().getId()==listRec.get(i).getId()){
+                        trovato=1;
+                        break;
+                    }
+                }
+                if(trovato==0){
+                    listStruRecensibili.put(pre.getStruttu().getId(), pre.getStruttu());
+                }
             }
         }
         return listStruRecensibili;
@@ -383,14 +424,31 @@ public class Roomify {
        stcorrente = null;
     }
 
-    //UC8
+//UC8 CREAZIONE ACCOUNT UTENTE
 
     public void registrazioneHost(String nome, String cognome, LocalDate dataNascita, String cf,String nTelefono, String email, String piva, String sFiscale, String residenza){
-        utenteCorrente = new Host(getId(),nome, cognome, dataNascita, cf,nTelefono, email, piva, sFiscale, residenza);
+       int trovato=0;
+        for(Utente ut: listaUtenti.values()){
+           if(ut.getCodicefiscale().equals(cf)){
+               trovato=1;
+           }
+       }
+        if(trovato==0){
+            utenteCorrente = new Host(getId(),nome, cognome, dataNascita, cf,nTelefono, email, piva, sFiscale, residenza);
+        }
     }
 
     public void registrazioneCliente(String nome, String cognome, LocalDate dataNascita, String cf,String nTelefono, String email){
-        utenteCorrente = new Cliente(getId(), nome, cognome, dataNascita, cf, nTelefono, email);
+        int trovato=0;
+        for(Utente ut: listaUtenti.values()){
+            if(ut.getCodicefiscale().equals(cf)){
+                trovato=1;
+            }
+        }
+        if(trovato==0){
+            utenteCorrente = new Cliente(getId(), nome, cognome, dataNascita, cf, nTelefono, email);
+        }
+
     }
 
     public void selezionaAbbonamento(int id){
@@ -402,23 +460,44 @@ public class Roomify {
         System.out.println("Account Inserito\n");
     }
 
-    //metodi secondari
+//UC13 COMMENTA RECENSIONE
+    public Map<Integer, Struttura> commentaRecensione(){
+        return ((Host)utenteCorrente).getListaStrutture();
+    }
+
+    public ArrayList<Recensione> getRecensioni(int id){
+        ArrayList<Recensione> listaRecComm = new ArrayList<>();
+        stcorrente = mapStrutture.get(id);
+        ArrayList<Recensione> re = mapStrutture.get(id).getListRecensioni();
+        for (int i = 0; i < re.size(); i++){
+            if (!re.get(i).getStato().equals("Completato")){
+                listaRecComm.add(re.get(i));
+            }
+        }
+        return listaRecComm;
+    }
+
+    public void inserisciCommento(String commentoHost,int id){
+        stcorrente.inserisciCommentoHost(commentoHost,id);
+    }
+
+
+
+//metodi secondari
 
     public Beb getBebCorrente(){
-
         return bebcorrente;
     }
-    public CasaVacanze getcvCorrente(){
 
+    public CasaVacanze getcvCorrente(){
         return cvcorrente;
     }
 
     public Map<Integer,Prenotazione> getListaprenotazioni(){
-
         return listaprenotazioni;
     }
-    public Map<Integer,Struttura> getElencoStrutture(){
 
+    public Map<Integer,Struttura> getElencoStrutture(){
         return mapStrutture;
     }
 
@@ -454,6 +533,15 @@ public class Roomify {
         }
     }
 
+
+    private int generaidStruttura(){
+       return mapStrutture.values().size()+1;
+    }
+
+    private int generaidStanza(){
+        return bebcorrente.getListaStanze().size()+1;
+    }
+
     public Utente getUtente(int id) {
         return listaUtenti.get(id);
     }
@@ -467,10 +555,17 @@ public class Roomify {
     }
 
     public int signUpLogIn(Utente utente) {
-
         listaUtenti.put(utente.getId(), utente);
         utenteCorrente = utente;
         return utente.getId();
+    }
+
+    public void logout() {
+        utenteCorrente = null;
+    }
+
+    public void setUtenteCorrente(Utente utenteCorrente) {
+        this.utenteCorrente = utenteCorrente;
     }
 
     public int getId(){
@@ -489,7 +584,17 @@ public class Roomify {
         return sv;
     }
 
+    public Map<Integer, Struttura> getMapStrutture() {
+        return mapStrutture;
+    }
 
+    public HashMap<Integer, Servizio> getServizi() {
+        return servizi;
+    }
+
+    public ArrayList<Abbonamento> getListaAbbonamneto() {
+        return listaAbbonamneto;
+    }
 
 }
 

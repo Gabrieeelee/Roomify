@@ -1,5 +1,11 @@
 package com.Roomify;
+import com.Roomify.Assistenza.CategoriaAssistenza;
+import com.Roomify.Assistenza.RichiestaAssistenza;
+import com.Roomify.Assistenza.RichiestaAssistenzaFactory;
+
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Utente {
     private String nome;
@@ -22,5 +28,30 @@ public class Utente {
 
     public int getId() {
         return id;
+    }
+
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public LocalDate getDataDiNascita() {
+        return dataDiNascita;
+    }
+
+    public String getCodicefiscale() {
+        return codicefiscale;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTelefono() {
+        return telefono;
     }
 }

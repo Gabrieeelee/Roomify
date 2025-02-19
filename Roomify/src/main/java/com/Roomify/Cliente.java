@@ -1,9 +1,12 @@
 package com.Roomify;
 
+
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class Cliente extends Utente {
 
@@ -36,7 +39,13 @@ public class Cliente extends Utente {
     }
 
     public void addRecensione(Recensione re){
+        re.setStato("Non convalidata");
         listaRecensioni.add(re);
     }
+
+    public ArrayList<Recensione> getListaRecensioni() {
+        return listaRecensioni;
+    }
+
 
 }

@@ -33,4 +33,8 @@ public class Host extends Utente{
         this.abbonamento = abbonamento;
         fineAbbonamento = LocalDate.now().plusMonths(12);
     }
+
+    public Abbonamento getAbbonamento() {
+        return abbonamento;
+    }
 }

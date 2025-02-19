@@ -69,8 +69,4 @@ public class CasaVacanze extends Struttura implements PrenotazioniObserve {
                 }
             }
         }
-
-
-
-
 }

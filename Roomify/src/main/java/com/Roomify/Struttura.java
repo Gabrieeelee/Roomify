@@ -95,7 +95,7 @@ public abstract class Struttura {
     }
 
     public Recensione inserisciRecensione(int valutazione, String commento,Cliente cliente){
-        Recensione re = new Recensione(valutazione, commento, cliente, this);
+        Recensione re = new Recensione(listRecensioni.size()+1,valutazione, commento, cliente, this);
         listRecensioni.add(re);
         return  re;
     }
@@ -115,5 +115,15 @@ public abstract class Struttura {
                 '}';
     }
 
+    public ArrayList<Recensione> getListRecensioni() {
+        return listRecensioni;
+    }
 
+    public Recensione getRecensione(int id){
+        return listRecensioni.get(id);
+    }
+    public void inserisciCommentoHost(String commentoHost, int id){
+        listRecensioni.get(id).setCommentoHost(commentoHost);
+        listRecensioni.get(id).setRecensioneConclusa();
+    }
 }
