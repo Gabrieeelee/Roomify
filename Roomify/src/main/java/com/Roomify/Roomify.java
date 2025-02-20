@@ -1,5 +1,7 @@
 package com.Roomify;
 
+import com.Roomify.Assistenza.RichiestaAssistenza;
+
 import java.util.*;
 import java.time.LocalDate;
 
@@ -11,7 +13,7 @@ public class Roomify {
     private Struttura stcorrente;
     private Map<Integer,Struttura> mapStrutture;
     private HashMap<Integer, Servizio> servizi;
-    private Map<Integer,Prenotazione> listaprenotazioni;
+   // private Map<Integer,Prenotazione> listaprenotazioni;
     private List<PrenotazioniObserve> osservatori = new ArrayList<>();
     private LocalDate corrDataInizio;
     private LocalDate corrDataFine;
@@ -20,11 +22,15 @@ public class Roomify {
     private Map<Integer,Utente> listaUtenti=new HashMap<>();
     private Utente utenteCorrente;
     private ArrayList<Abbonamento> listaAbbonamneto;
+    private Map<Integer, RichiestaAssistenza> listaAssistenza;
     private Struttura strutturascelta;
+    private RichiestaAssistenza richiestaAssistenzaScelta;
+    private RichiestaAssistenza richiestaAssistenzaCorrente;
 
     private Roomify() {
         this.mapStrutture = new HashMap<>();
-        this.listaprenotazioni = new HashMap<>();
+      //  this.listaprenotazioni = new HashMap<>();
+        this.listaAssistenza = new HashMap<>();
         populate();
     }
 
@@ -293,8 +299,9 @@ public class Roomify {
            if (st.getId() == id){
                strutturascelta=st;
                if(st instanceof CasaVacanze) {
+
                    pre= new Prenotazione();
-                   pre.setId(generaNumeroPrenotazione());
+                   pre.setId(((CasaVacanze)st).generaNumeroPrenotazione());
                    pre.setDatainizio(corrDataInizio);
                    pre.setDatafine(corrDataFine);
                    pre.setStato("In prenotazione...");
@@ -313,7 +320,7 @@ public class Roomify {
             for(int i = 0; i < st.size(); i++){
                 if (st.get(i).getId() == id){
                     pre= new Prenotazione();
-                    pre.setId(generaNumeroPrenotazione());
+                    pre.setId(st.get(i).generaNumeroPrenotazione());
                     pre.setDatainizio(corrDataInizio);
                     pre.setDatafine(corrDataFine);
                     pre.setStato("In prenotazione...");
@@ -329,7 +336,8 @@ public class Roomify {
         if(pre!=null){
             pre.setStato("Prenotato");
             ((Cliente)utenteCorrente).addPrenotazione(pre);
-            listaprenotazioni.put(pre.getId(), pre);
+         //   listaprenotazioni.put(pre.getId(), pre);
+
             System.out.println("Inserimento completato, buon viaggio");
             notificaOsservatori();
         } else {
@@ -337,43 +345,36 @@ public class Roomify {
         }
     }
 
-//UC3 VISUALIZZA PRENOTAZIONI STRUTTURA
-    public void visualizzaPrenotazioni(){
-        for(Struttura struttura : ((Host)utenteCorrente).getListaStrutture().values()){
-            System.out.println(struttura.toString());
-        }
+//UC3 VISUALIZZA PRENOTAZIONI SU STRUTTURA
+    public Map<Integer,Struttura> visualizzaPrenotazioni(){
+        return ((Host)utenteCorrente).getListaStrutture();
     }
 
-    public void selezionaStrutturaVis(int id){
+    public Map<Integer,Prenotazione> selezionaStrutturaVis(int id){
         Struttura st = ((Host)utenteCorrente).getListaStrutture().get(id);
+        Map<Integer,  Prenotazione> prenotazioni = new HashMap<>();
         if(st instanceof CasaVacanze){
-            for(Prenotazione pren: ((CasaVacanze)st).getListaprenotazioni().values()){
-                System.out.println(pren.toString());
-            }
+           return ((CasaVacanze)st).getListaprenotazioni();
         }else{
             Map<String, Stanza> stn = ((Beb)st).getListaStanze();
             for(Stanza stnn : stn.values()){
                 for(Prenotazione pren : stnn.getListaprenotazioni().values()){
-                    System.out.println(pren.toString());
+                    prenotazioni.put(pren.getId(), pren);
                 }
             }
+            return prenotazioni;
         }
     }
 
 //UC4 VISUALIZZA PRENOTAZIONI EFFETTUATE
-    public Map<Integer, Utente> getListaUtenti() {
-        return listaUtenti;
-    }
 
-    public void visualizzaPrenotazioni( LocalDate dataInizio, LocalDate dataFine){
+    public Map<Integer,Prenotazione> visualizzaPrenotazioniCliente( LocalDate dataInizio, LocalDate dataFine){
         Map<Integer, Prenotazione> map = ((Cliente)utenteCorrente).getListaPrenotazioniClienti(dataInizio, dataFine);
         if (!map.isEmpty()){
             System.out.println("Ecco le prenotazioni: \n");
-            for (Prenotazione pre : map.values()){
-                System.out.println(pre.toString());
-            }
+            return map;
         }else{
-            System.out.println("Nessuna prenotazione nel periodo selezionato.");
+            return null;
         }
     }
 
@@ -382,13 +383,13 @@ public class Roomify {
         return ((Cliente)utenteCorrente).getListaPrenotazioniClienti();
     }
 
-    public void selezionaPrenotazione(int id){
+    public boolean selezionaPrenotazione(int id){
         pre = ((Cliente)utenteCorrente).getListaPrenotazioniClienti().get(id);
         if (LocalDate.now().isBefore(pre.getDatainizio())){
             pre.setStato("Prenotazione annullata");
-            System.out.println("Prenotazione annullata");
+            return true;
         }else{
-            System.out.println("Stato non modificato, la prenotazione è già avvenuta.");
+            return false;
         }
     }
 
@@ -426,29 +427,24 @@ public class Roomify {
 
 //UC8 CREAZIONE ACCOUNT UTENTE
 
-    public void registrazioneHost(String nome, String cognome, LocalDate dataNascita, String cf,String nTelefono, String email, String piva, String sFiscale, String residenza){
-       int trovato=0;
+    public boolean registrazioneHost(String nome, String cognome, LocalDate dataNascita, String cf,String nTelefono, String email, String piva, String sFiscale, String residenza){
         for(Utente ut: listaUtenti.values()){
            if(ut.getCodicefiscale().equals(cf)){
-               trovato=1;
+               return false;
            }
        }
-        if(trovato==0){
-            utenteCorrente = new Host(getId(),nome, cognome, dataNascita, cf,nTelefono, email, piva, sFiscale, residenza);
-        }
+        utenteCorrente = new Host(getId(),nome, cognome, dataNascita, cf,nTelefono, email, piva, sFiscale, residenza);
+        return true;
     }
 
-    public void registrazioneCliente(String nome, String cognome, LocalDate dataNascita, String cf,String nTelefono, String email){
-        int trovato=0;
+    public boolean registrazioneCliente(String nome, String cognome, LocalDate dataNascita, String cf,String nTelefono, String email){
         for(Utente ut: listaUtenti.values()){
             if(ut.getCodicefiscale().equals(cf)){
-                trovato=1;
+                return false;
             }
         }
-        if(trovato==0){
-            utenteCorrente = new Cliente(getId(), nome, cognome, dataNascita, cf, nTelefono, email);
-        }
-
+        utenteCorrente = new Cliente(getId(), nome, cognome, dataNascita, cf, nTelefono, email);
+        return true;
     }
 
     public void selezionaAbbonamento(int id){
@@ -470,7 +466,7 @@ public class Roomify {
         stcorrente = mapStrutture.get(id);
         ArrayList<Recensione> re = mapStrutture.get(id).getListRecensioni();
         for (int i = 0; i < re.size(); i++){
-            if (!re.get(i).getStato().equals("Completato")){
+            if (!re.get(i).getStato().equals("Concluso")){
                 listaRecComm.add(re.get(i));
             }
         }
@@ -481,7 +477,53 @@ public class Roomify {
         stcorrente.inserisciCommentoHost(commentoHost,id);
     }
 
+//UC11 RICHIESTA ASSSITENZA
+    public void richiestaAssistenza(String descrizione,int id,String scelta){
+        String stato="In elaborazione";
+        switch (scelta){
+            case "Prenotazione":
+                if(utenteCorrente instanceof Cliente){
+                    richiestaAssistenzaCorrente = ((Cliente)utenteCorrente).richiestaAssistenzaPrenotazione(generaNumeroAssistenza(),descrizione,id,stato);
+                }else{
+                    richiestaAssistenzaCorrente = ((Host)utenteCorrente).richiestaAssistenzaPrenotazione(generaNumeroAssistenza(),descrizione,id,stato);
+                }
+                break;
+            case "Recensione":
+                if(utenteCorrente instanceof Cliente){
+                    richiestaAssistenzaCorrente = ((Cliente)utenteCorrente).richiestaAssistenzaRecensione(generaNumeroAssistenza(),descrizione,id,stato);
+                }else{
+                    richiestaAssistenzaCorrente = ((Host)utenteCorrente).richiestaAssistenzaRecensione(generaNumeroAssistenza(),descrizione,id,stato);
+                }
+                break;
+            default:
+                richiestaAssistenzaCorrente = utenteCorrente.richiestaAssistenza(generaNumeroAssistenza(),descrizione,stato);
+        }
 
+    }
+
+    public void confermaAssistenza(){
+        listaAssistenza.put(richiestaAssistenzaCorrente.getId(), richiestaAssistenzaCorrente);
+        utenteCorrente.confermaAssistenza();
+        richiestaAssistenzaCorrente = null;
+    }
+
+
+
+//UC12 GESTISCI RICHIESTA ASSISTENZA
+    public RichiestaAssistenza selezionaRAssistenza(int id){
+        richiestaAssistenzaScelta = listaAssistenza.get(id);
+        return richiestaAssistenzaScelta;
+    }
+
+    public void generaMessaggio(String descrizioneSo){
+        Messaggio mess=new Messaggio(richiestaAssistenzaScelta.getListaMessaggi().size()+1,descrizioneSo);
+        richiestaAssistenzaScelta.addMessaggio(mess);
+    }
+
+    public void confermaMessaggio(){
+        richiestaAssistenzaScelta.setStato("Chiuso");
+        richiestaAssistenzaScelta = null;
+    }
 
 //metodi secondari
 
@@ -493,9 +535,9 @@ public class Roomify {
         return cvcorrente;
     }
 
-    public Map<Integer,Prenotazione> getListaprenotazioni(){
+    /*public Map<Integer,Prenotazione> getListaprenotazioni(){
         return listaprenotazioni;
-    }
+    }*/
 
     public Map<Integer,Struttura> getElencoStrutture(){
         return mapStrutture;
@@ -523,7 +565,7 @@ public class Roomify {
         return utenteCorrente;
     }
 
-    private int generaNumeroPrenotazione(){
+   /* private int generaNumeroPrenotazione(){
         Random random=new Random();
         while(true){
             int randomNumber=random.nextInt(200000);
@@ -531,9 +573,17 @@ public class Roomify {
                 return randomNumber;
             }
         }
+    }*/
+
+    private int generaNumeroAssistenza(){
+        Random random=new Random();
+        while(true){
+            int randomNumber=random.nextInt(200000);
+            if (!listaAssistenza.containsKey(randomNumber)){
+                return randomNumber;
+            }
+        }
     }
-
-
     private int generaidStruttura(){
        return mapStrutture.values().size()+1;
     }
@@ -584,6 +634,10 @@ public class Roomify {
         return sv;
     }
 
+    public Map<Integer, Utente> getListaUtenti() {
+        return listaUtenti;
+    }
+
     public Map<Integer, Struttura> getMapStrutture() {
         return mapStrutture;
     }
@@ -594,6 +648,14 @@ public class Roomify {
 
     public ArrayList<Abbonamento> getListaAbbonamneto() {
         return listaAbbonamneto;
+    }
+
+    public Map<Integer, RichiestaAssistenza> getListaAssistenza() {
+        return listaAssistenza;
+    }
+
+    public RichiestaAssistenza getRichiestaAssistenzaScelta() {
+        return richiestaAssistenzaScelta;
     }
 
 }

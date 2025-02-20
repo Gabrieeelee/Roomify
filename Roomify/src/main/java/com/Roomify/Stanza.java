@@ -27,6 +27,17 @@ public class Stanza implements PrenotazioniObserve {
         this.beb = beb;
     }
 
+
+    public int generaNumeroPrenotazione(){
+        Random random=new Random();
+        while(true){
+            int randomNumber=random.nextInt(200000);
+            if (!listaprenotazioni.containsKey(randomNumber)){
+                return randomNumber;
+            }
+        }
+    }
+
     public String getNome() {
         return nome;
     }

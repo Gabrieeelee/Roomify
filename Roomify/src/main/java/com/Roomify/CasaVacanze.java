@@ -1,9 +1,6 @@
 package com.Roomify;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CasaVacanze extends Struttura implements PrenotazioniObserve {
 
@@ -69,4 +66,14 @@ public class CasaVacanze extends Struttura implements PrenotazioniObserve {
                 }
             }
         }
+
+    public int generaNumeroPrenotazione(){
+        Random random=new Random();
+        while(true){
+            int randomNumber=random.nextInt(200000);
+            if (!listaprenotazioni.containsKey(randomNumber)){
+                return randomNumber;
+            }
+        }
+    }
 }

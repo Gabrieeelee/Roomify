@@ -59,7 +59,7 @@ public class MenuHost extends Menu{
 
 
         try{
-           sistema.inserisciBeB(sistema.getIdStrutture(),nome,descrizione,paese,citta,provincia,cap,indirizzo);
+           sistema.inserisciBeB(nome,descrizione,paese,citta,provincia,cap,indirizzo);
         } catch(Exception e){
             System.out.println(e.getMessage());
             return;

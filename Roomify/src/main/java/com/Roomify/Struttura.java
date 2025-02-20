@@ -29,6 +29,7 @@ public abstract class Struttura {
         this.listRecensioni=new ArrayList<>();
     }
 
+
     public int getId() {
         return id;
     }

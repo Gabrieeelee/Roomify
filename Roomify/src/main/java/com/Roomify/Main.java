@@ -9,9 +9,53 @@ public class Main {
     public static void main(String[] args) {
         Roomify roomify= Roomify.getInstance();
 
-        roomify.registrazioneHost("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228", "123123123", "IT", "Via Francesco II");
+       /* roomify.registrazioneHost("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228", "123123123", "IT", "Via Francesco II");
         roomify.selezionaAbbonamento(3);
         roomify.confermaRegistrazione();
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Inserisci id recensione");
+        int id = input.nextInt();
+
+        Cliente cl=(Cliente)roomify.getListaUtenti().get(7);
+        roomify.login(cl);
+
+        roomify.richiestaAssistenza("Problemi con Recensione,voglio eliminarla",id,"Recensione");
+/*
+        Host ho=(Host)roomify.getListaUtenti().get(8);
+        roomify.login(ho);
+
+        System.out.println("Inserisci id Recensione");
+        id = input.nextInt();
+
+        roomify.richiestaAssistenza("Problemi con Recensione il cliente è maleducato",id,"Recensione");
+*/
+       /* System.out.println("Inserisci id ass");
+        id = input.nextInt();
+        roomify.selezionaRAssistenza(id);
+        roomify.generaMessaggio("CIAO");
+        roomify.confermaMessaggio();
+*/
+
+      /*  Scanner input = new Scanner(System.in);
+        System.out.println("Inserisci id prenotazione");
+        int id = input.nextInt();
+
+        Cliente cl=(Cliente)roomify.getListaUtenti().get(1);
+        roomify.login(cl);
+
+        roomify.richiestaAssistenza("Problemi con prenotazione",id,"Prenotazione");
+
+        Host ho=(Host)roomify.getListaUtenti().get(6);
+        roomify.login(ho);
+
+        System.out.println("Inserisci id prenotazione");
+        id = input.nextInt();
+
+        roomify.richiestaAssistenza("Problemi con prenotazione",id,"Prenotazione");
+
+        roomify.richiestaAssistenza("non so come si registra un struttura",0,"altro");
+*/
 /*        Host host=(Host)roomify.getListaUtenti().get(6);
         roomify.login(host);
         roomify.visualizzaPrenotazioni();

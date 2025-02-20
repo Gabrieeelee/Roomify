@@ -28,5 +28,11 @@ public class TestStruttura {
         assertEquals(sv+1,st.getListRecensioni().size());
     }
 
-   
+    @Test
+    public void testInserisciCommento(){
+        int sv = st.getListRecensioni().size();
+        st.inserisciRecensione(3, "Test Struttura recensione", cl);
+        st.inserisciCommentoHost("Testo Struttura Commento", 0);
+        assertEquals(1, st.getListRecensioni().size());
+    }
 }
