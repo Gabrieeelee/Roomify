@@ -95,11 +95,12 @@ public abstract class Struttura {
         this.indirizzo = indirizzo;
     }
 
-    public Recensione inserisciRecensione(int valutazione, String commento,Cliente cliente){
-        Recensione re = new Recensione(listRecensioni.size()+1,valutazione, commento, cliente, this);
+
+    public void addRecensione(Recensione re){
+
         listRecensioni.add(re);
-        return  re;
     }
+
 
     @Override
     public String toString() {

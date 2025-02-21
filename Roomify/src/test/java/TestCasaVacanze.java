@@ -35,10 +35,5 @@ public class TestCasaVacanze {
         cv.inserisciTariffa("Estiva", 3, 3.15f );
     }
 
-    @Test
-    public void testAggiorno(){
-        int sv = cv.getListaprenotazioni().size();
-        cv.aggiorna(pre);
-        assertEquals(sv+1, cv.getListaprenotazioni().size());
-    }
+
 }

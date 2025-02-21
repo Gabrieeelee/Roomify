@@ -2,7 +2,7 @@ package com.Roomify;
 
 import java.util.*;
 
-public class CasaVacanze extends Struttura implements PrenotazioniObserve {
+public class CasaVacanze extends Struttura {
 
     private int nMaxOspiti;
     private int nVani;
@@ -58,15 +58,15 @@ public class CasaVacanze extends Struttura implements PrenotazioniObserve {
 
     }
 
-
-    public void aggiorna(Prenotazione prenotazione) {
+//era per il pattern observe
+/*    public void aggiorna(Prenotazione prenotazione) {
             if(prenotazione.getStruttu() instanceof CasaVacanze){
                 if (prenotazione.getStruttu().getId() == this.getId()) {
                     listaprenotazioni.put(prenotazione.getId(), prenotazione);
                 }
             }
         }
-
+*/
     public int generaNumeroPrenotazione(){
         Random random=new Random();
         while(true){

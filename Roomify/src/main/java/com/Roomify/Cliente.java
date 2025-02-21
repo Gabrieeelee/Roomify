@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class Cliente extends Utente {
+public class Cliente extends Utente  {
 
     private Map<Integer,Prenotazione> listaPrenotazioniClienti;
     private ArrayList<Recensione> listaRecensioni;
@@ -20,6 +20,16 @@ public class Cliente extends Utente {
         super(id,nome, cognome, dataDiNascita, codicefiscale, email, telefono);
         listaPrenotazioniClienti= new HashMap<>();
         listaRecensioni = new ArrayList<>();
+    }
+
+    public Map<Integer,Struttura> nuovaRecensione(){
+        Map<Integer,Struttura> listStruRecensibili= new HashMap<>();
+        for (Prenotazione pre: listaPrenotazioniClienti.values()){
+            if(pre.isRecensibile()!=null){
+                listStruRecensibili.put(pre.isRecensibile().getId(),pre.isRecensibile());
+            }
+        }
+        return listStruRecensibili;
     }
 
     public void addPrenotazione(Prenotazione pre){
@@ -41,9 +51,12 @@ public class Cliente extends Utente {
         return listaPrenotazioniClienti;
     }
 
-    public void addRecensione(Recensione re){
+
+    public Recensione inserisciRecensione(int valutazione, String commento,Cliente cliente, Struttura st){
+        Recensione re = new Recensione(listaRecensioni.size()+1,valutazione, commento, cliente,st );
         re.setStato("Non convalidata");
         listaRecensioni.add(re);
+        return  re;
     }
 
     public ArrayList<Recensione> getListaRecensioni() {
@@ -76,4 +89,11 @@ public class Cliente extends Utente {
         setRichiestaAssistenzacorr(richiesta1);
         return richiesta1;
     }
+
+
+
+  /*  @Override
+    public void aggiorna(Prenotazione prenotazione) {
+        listaPrenotazioniClienti.put(prenotazione.getId(), prenotazione);
+    }*/
 }

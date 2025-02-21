@@ -114,7 +114,7 @@ public class TestRoomify {
         ArrayList<Struttura> lista=roomify.prenotaAlloggio("Taormina", LocalDate.of(2020,10,10),LocalDate.of(2020,10,15),2);
 
         Struttura st=roomify.selezionaStruttura(5);
-        roomify.selezionaStanza(1,st);
+        roomify.selezionaStanza(1);
         assertEquals(1,roomify.getPrenotazioneCorrente().getStanza().getId());
     }
 
@@ -124,7 +124,7 @@ public class TestRoomify {
 
         ArrayList<Struttura> lista=roomify.prenotaAlloggio("Taormina", LocalDate.of(2023,10,10),LocalDate.of(2023,10,15),2);
         Struttura st=roomify.selezionaStruttura(5);
-        roomify.selezionaStanza(1,st);
+        roomify.selezionaStanza(1);
         roomify.confermaPrenotazione();
       //  assertEquals(7,roomify.getListaprenotazioni().size());
     }

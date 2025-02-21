@@ -108,4 +108,13 @@ public class Prenotazione {
                 ", struttu=" + struttu +
                 '}';
     }
+
+
+    public Struttura isRecensibile(){
+        if(LocalDate.now().isAfter(datafine)){
+            return struttu;
+        }
+        else
+            return null;
+    }
 }

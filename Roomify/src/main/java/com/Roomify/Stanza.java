@@ -3,7 +3,7 @@ package com.Roomify;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Stanza implements PrenotazioniObserve {
+public class Stanza  {
 
     private int id;
     private String nome;
@@ -74,12 +74,12 @@ public class Stanza implements PrenotazioniObserve {
         return listaprenotazioni;
     }
 
-
-    public void aggiorna(Prenotazione pren) {
+//era per il pattern observe in caso rimetter implements
+    /*public void aggiorna(Prenotazione pren) {
         if(pren.getStanza()==this) {
             listaprenotazioni.put(pren.getId(), pren);
             }
-    }
+    }*/
 
 
 
