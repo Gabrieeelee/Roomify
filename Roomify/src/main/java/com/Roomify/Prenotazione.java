@@ -96,6 +96,7 @@ public class Prenotazione {
         return struttu;
     }
 
+
     @Override
     public String toString() {
         return "Prenotazione{" +

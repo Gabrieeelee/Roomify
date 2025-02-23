@@ -91,13 +91,10 @@ public abstract class Struttura {
     }
 
     public void setIndirizzo(String indirizzo) {
-
         this.indirizzo = indirizzo;
     }
 
-
     public void addRecensione(Recensione re){
-
         listRecensioni.add(re);
     }
 
@@ -121,11 +118,27 @@ public abstract class Struttura {
         return listRecensioni;
     }
 
-    public Recensione getRecensione(int id){
-        return listRecensioni.get(id);
+    public ArrayList<Recensione> getRecComm(){
+        ArrayList<Recensione> recensioni=new ArrayList<>();
+        for(int i=0;i<listRecensioni.size();i++){
+            Recensione re=listRecensioni.get(i).isRisp();
+            if(re!=null)
+                recensioni.add(re);
+        }
+        return recensioni;
     }
+
     public void inserisciCommentoHost(String commentoHost, int id){
-        listRecensioni.get(id).setCommentoHost(commentoHost);
-        listRecensioni.get(id).setRecensioneConclusa();
+        for(int i=0;i<listRecensioni.size();i++){
+            if(listRecensioni.get(i).getId()==id){
+                listRecensioni.get(i).setCommentoHost(commentoHost);
+                listRecensioni.get(i).setStato("Concluso");
+                break;
+            }
+        }
+   //     listRecensioni.get(id).setCommentoHost(commentoHost);
+     //   listRecensioni.get(id).setRecensioneConclusa();
     }
+
+
 }

@@ -3,7 +3,6 @@ package com.Roomify.UI;
 import com.Roomify.Exception.LogException;
 import com.Roomify.*;
 import com.Roomify.Exception.LoginClienteException;
-import com.Roomify.Exception.LoginHostException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,13 +23,13 @@ public class LoginMenu extends Menu  {
     void processaScelta(int scelta) throws LogException {
         switch (scelta) {
             case 1:
-                accedi();
+       //         accedi();
                 break;
             case 2:
-                registrati();
+     //           registrati();
                 break;
             case 3:
-                chiudi();
+   //             chiudi();
                 break;
             default:
                 System.out.println("Scelta non valida.");
@@ -38,7 +37,7 @@ public class LoginMenu extends Menu  {
         }
     }
 
-    private static void accedi() throws LogException {
+ /*   private static void accedi() throws LogException {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Inserisci il tuo identificativo:");
@@ -127,5 +126,5 @@ public class LoginMenu extends Menu  {
     }
     public void chiudi() throws LogException {
         throw new LogException();
-    }
+    }*/
 }

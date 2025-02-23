@@ -1,6 +1,7 @@
 package com.Roomify;
 
 import com.Roomify.Assistenza.RichiestaAssistenza;
+import com.Roomify.Exception.LoginClienteException;
 
 import java.util.*;
 import java.time.LocalDate;
@@ -11,20 +12,24 @@ public class Roomify {
 
    // private Beb bebcorrente;
    // private CasaVacanze cvcorrente;
-    private Struttura stcorrente;
-    private Map<Integer,Struttura> mapStrutture;
-    private HashMap<Integer, Servizio> servizi;
-    private List<PrenotazioniObserve> osservatori = new ArrayList<>();
-    private Map<Integer,Utente> listaUtenti=new HashMap<>();
+
     private Utente utenteCorrente;
+    private Struttura stcorrente;
+    private Prenotazione pre;
+
+    private Map<Integer,Struttura> mapStrutture;
+    private Map<Integer,Utente> listaUtenti=new HashMap<>();
+    private HashMap<Integer, Servizio> servizi;
+    private ArrayList<Abbonamento> listaAbbonamneto;
+    private Map<Integer, RichiestaAssistenza> listaAssistenza;
+
 
     // private Map<Integer,Prenotazione> listaprenotazioni;
     private LocalDate corrDataInizio;
     private LocalDate corrDataFine;
     private int corrNumOspiti;
-    private Prenotazione pre;
-    private ArrayList<Abbonamento> listaAbbonamneto;
-    private Map<Integer, RichiestaAssistenza> listaAssistenza;
+    private String categoriaCorr;
+
     private Struttura strutturascelta;
     private RichiestaAssistenza richiestaAssistenzaScelta;
     private RichiestaAssistenza richiestaAssistenzaCorrente;
@@ -36,6 +41,14 @@ public class Roomify {
         populate();
     }
 
+    public static Roomify getInstance() {
+        if (roomify == null)
+            roomify = new Roomify();
+        else
+            System.out.println("Istanza già creata");
+
+        return roomify;
+    }
     private void populate() {
 
         this.listaAbbonamneto = new ArrayList<>();
@@ -71,12 +84,12 @@ public class Roomify {
         ArrayList<Integer> listcod1 = new ArrayList<>(Arrays.asList(1, 4, 6, 8));
         ArrayList<Integer> listcod2 = new ArrayList<>(Arrays.asList(2, 3, 5, 7));
 
-        login(listaUtenti.get(4));
+        logIn(4);
         inserisciCasavacanza( "Villa Sole", "Splendida villa con piscina e vista mare.", "Italia", "Palermo", "PA", 90100, "Via Roma, 10", 6, 4, 120.50f, 150, listcod1 );
         confermaCasaVacanze();
         logout();
 
-        login(listaUtenti.get(2));
+        logIn(2);
         inserisciCasavacanza( "Casa Luna", "Accogliente casa nel centro storico", "Italia", "Roma", "RM", 00100, "Via dei Fori, 5", 4, 3, 80.00f, 90, listcod2);
         confermaCasaVacanze();
 
@@ -84,7 +97,7 @@ public class Roomify {
        confermaCasaVacanze();
         logout();
 
-        login(listaUtenti.get(6));
+        logIn(6);
         inserisciBeB( "La Dolce Mela", "Un bellissimo B&B immerso nel verde", "Italia", "Taormina", "Messina", 98034, "Via Mazzini 12");
         inserisciStanza( "Camera Standard", 2, 60, 100, "Camera economica e accogliente", listcod1);
         inserisciStanza( "Camera Deluxe", 4, 100, 150, "Camera spaziosa e confortevole", listcod2);
@@ -105,7 +118,7 @@ public class Roomify {
         confermaBeB();
         logout();
 
-        login(listaUtenti.get(8));
+        logIn(8);
         inserisciBeB( "B&B Sole e Mare", "Perfetto per chi ama il mare", "Italia", "Napoli", "NA", 80100, "Via Caracciolo 21");
         inserisciStanza( "Camera Marina", 3, 85, 130, "Camera con vista mare", listcod1);
         inserisciStanza( "Camera Blue", 4, 95, 140, "Camera con colori rilassanti", listcod2);
@@ -120,13 +133,9 @@ public class Roomify {
         confermaBeB();
         logout();
 
-        Cliente cliente1 = (Cliente) listaUtenti.get(1);
-        Cliente cliente2 = (Cliente) listaUtenti.get(3);
-        Cliente cliente3 = (Cliente) listaUtenti.get(5);
-        Cliente cliente4 = (Cliente) listaUtenti.get(7);
 
         // Prenotazione per un B&B a Taormina
-        login(cliente1);
+        logIn(1);
         ArrayList<Struttura> listaDisp1 = prenotaAlloggio("Taormina", LocalDate.of(2025, 5, 10), LocalDate.of(2025, 6, 13), 2);
         Struttura st1 = selezionaStruttura(4);
         selezionaStanza(1);
@@ -146,7 +155,7 @@ public class Roomify {
         logout();
 
         // Prenotazione per un B&B a Firenze
-        login(cliente2);
+        logIn(3);
         ArrayList<Struttura> listaDisp2 =prenotaAlloggio("Firenze", LocalDate.of(2020, 7, 1), LocalDate.of(2020, 7, 15), 3);
         Struttura st2 = selezionaStruttura(5);
         selezionaStanza(2);
@@ -156,7 +165,7 @@ public class Roomify {
         logout();
 
         // Prenotazione per un B&B a Napoli
-        login(cliente3);
+        logIn(5);
         ArrayList<Struttura> listaDisp3 = prenotaAlloggio("Napoli", LocalDate.of(2025, 8, 5), LocalDate.of(2025, 8, 12), 4);
         Struttura st3 = selezionaStruttura(6);
         selezionaStanza(3);
@@ -165,7 +174,7 @@ public class Roomify {
         logout();
 
         // Prenotazione per un B&B a Torino
-        login(cliente4);
+        logIn(7);
         ArrayList<Struttura> listaDisp4 = prenotaAlloggio("Torino", LocalDate.of(2022, 9, 10), LocalDate.of(2022, 9, 20), 4);
         Struttura st4 = selezionaStruttura(8);
         selezionaStanza(3);
@@ -173,16 +182,27 @@ public class Roomify {
         selezionaStrutturaRec(8);
         inserisciRecensione(5,"mi piace");
         logout();
+
+        //Commento recensioni da parte dell'host
+        logIn(8);
+        Map<Integer,Struttura> strutComm=commentaRecensione();
+
+        System.out.println("Strutt comm");
+        for(Struttura st: strutComm.values()){
+            System.out.println("ID:"+st.getId());
+        }
+        selStrut(8);
+        System.out.println("Lista recensioni: ");
+        ArrayList<Recensione> listarec=getRecensioniComm();
+        for(int i=0;i<listarec.size();i++){
+            System.out.println("Recensione con id:"+listarec.get(i).getId());
+        }
+        inserisciCommento("sei maleducato",1);
+        logout();
+
     }
 
-    public static Roomify getInstance() {
-        if (roomify == null)
-            roomify = new Roomify();
-        else
-            System.out.println("Istanza già creata");
 
-        return roomify;
-    }
 
 //UC1 GESTIONE STRUTTURA
     public void inserisciBeB( String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo){
@@ -396,25 +416,6 @@ public class Roomify {
     }
 
 //UC6 RECENSIONE STRUTTURA
-  /*  public Map<Integer, Struttura> nuovaRecensione(){
-       Map<Integer, Struttura> listStruRecensibili = new HashMap<>();
-       int trovato=0;
-        for (Prenotazione pre: ((Cliente) utenteCorrente).getListaPrenotazioniClienti().values()){
-            ArrayList<Recensione> listRec= ((Cliente)utenteCorrente).getListaRecensioni();
-            if ((LocalDate.now().isAfter(pre.getDatafine()))){
-                for(int i=0;i<listRec.size();i++){
-                    if(pre.getStruttu().getId()==listRec.get(i).getId()){
-                        trovato=1;
-                        break;
-                    }
-                }
-                if(trovato==0){
-                    listStruRecensibili.put(pre.getStruttu().getId(), pre.getStruttu());
-                }
-            }
-        }
-        return listStruRecensibili;
-    }*/
 
     public Map<Integer, Struttura> nuovaRecensione(){
         return ((Cliente)utenteCorrente).nuovaRecensione();
@@ -467,24 +468,64 @@ public class Roomify {
         return ((Host)utenteCorrente).getListaStrutture();
     }
 
-    public ArrayList<Recensione> getRecensioni(int id){
+    public Struttura selStrut(int id){
+        strutturascelta=mapStrutture.get(id);
+        return mapStrutture.get(id);
+    }
+
+    public ArrayList<Recensione> getRecensioniComm(){
         ArrayList<Recensione> listaRecComm = new ArrayList<>();
-        stcorrente = mapStrutture.get(id);
-        ArrayList<Recensione> re = mapStrutture.get(id).getListRecensioni();
-        for (int i = 0; i < re.size(); i++){
-            if (!re.get(i).getStato().equals("Concluso")){
-                listaRecComm.add(re.get(i));
-            }
-        }
+        listaRecComm=strutturascelta.getRecComm();
         return listaRecComm;
     }
 
     public void inserisciCommento(String commentoHost,int id){
-        stcorrente.inserisciCommentoHost(commentoHost,id);
-        stcorrente = null;
+        strutturascelta.inserisciCommentoHost(commentoHost,id);
+        strutturascelta = null;
     }
 
 //UC11 RICHIESTA ASSSITENZA
+
+  /*  public ArrayList<?> assistenza(String id){
+        categoriaCorr=id;
+        if (utenteCorrente instanceof Cliente) {
+            switch (id) {
+                case "Prenotazione":
+                    return new ArrayList<>(((Cliente) utenteCorrente).getListaPrenotazioniClienti().values());
+                case "Recensione":
+                    return ((Cliente) utenteCorrente).getListaRecensioni();
+                case "Altri_motivi":
+                    return null;
+            }
+        }else{
+                switch (id) {
+                    case "Prenotazione":
+                        ArrayList<Prenotazione> sv = new ArrayList<>()
+                        for(Struttura struttura : ((Host)utenteCorrente).getListaStrutture().values()){
+                            if(struttura instanceof  CasaVacanze){
+                                ArrayList<Prenotazione> prenotazioni = ((CasaVacanze) struttura).getListaprenotazioni().values();
+                                for (int i =0; i < prenotazioni.size(); i++){
+                                    sv.add(prenotazioni.get(i));
+                                }
+                            } else {
+                                Map<String, Stanza> stn =  ((Beb)struttura).getListaStanze();
+                                for(Stanza st : stn.values()){
+                                    if(st.getListaprenotazioni().get(id) != null){
+                                        sv.add(pre);
+                                    }
+                                }
+                            }
+                            return sv;
+                    case "Recensione":
+                        return ((Cliente)utenteCorrente).getListaRecensioni();
+                    case "Altri_motivi":
+                        return null;
+                }
+            }
+
+        return null;
+    }*/
+    //nel menu poi facciamo che l'utente visualizza le sue prenotazioni e poi scegliere quale fare
     public void richiestaAssistenza(String descrizione,int id,String scelta){
         String stato="In elaborazione";
         switch (scelta){
@@ -544,9 +585,7 @@ public class Roomify {
         return (CasaVacanze)stcorrente ;
     }
 
-    /*public Map<Integer,Prenotazione> getListaprenotazioni(){
-        return listaprenotazioni;
-    }*/
+
 
     public Map<Integer,Struttura> getElencoStrutture(){
         return mapStrutture;
@@ -556,33 +595,9 @@ public class Roomify {
         return pre;
     }
 
-    public void aggiungiOsservatore(PrenotazioniObserve o) {
-        osservatori.add(o);
-    }
-
-    public void rimuoviOsservatore(PrenotazioniObserve o) {
-        osservatori.remove(o);
-    }
-
-    private void notificaOsservatori() {
-        for (PrenotazioniObserve o : osservatori) {
-            o.aggiorna(pre);
-        }
-    }
-
     public Utente getUtenteCorrente() {
         return utenteCorrente;
     }
-
-   /* private int generaNumeroPrenotazione(){
-        Random random=new Random();
-        while(true){
-            int randomNumber=random.nextInt(200000);
-            if (!listaprenotazioni.containsKey(randomNumber)){
-                return randomNumber;
-            }
-        }
-    }*/
 
     private int generaNumeroAssistenza(){
         Random random=new Random();
@@ -593,6 +608,7 @@ public class Roomify {
             }
         }
     }
+
     private int generaidStruttura(){
        return mapStrutture.values().size()+1;
     }
@@ -605,14 +621,8 @@ public class Roomify {
         return listaUtenti.get(id);
     }
 
-    public void login(Utente utente){
-        utenteCorrente=utente;
-    }
-
     public void logIn(int id){
         utenteCorrente=listaUtenti.get(id);
-      //  if(utenteCorrente instanceof Cliente)
-       // aggiungiOsservatore(((Cliente)utenteCorrente));
     }
 
     public int signUpLogIn(Utente utente) {
@@ -625,16 +635,8 @@ public class Roomify {
         utenteCorrente = null;
     }
 
-    public void setUtenteCorrente(Utente utenteCorrente) {
-        this.utenteCorrente = utenteCorrente;
-    }
-
     public int getId(){
         return listaUtenti.values().size()+1;
-    }
-
-    public int getIdStrutture(){
-        return mapStrutture.values().size()+1;
     }
 
     private ArrayList<Servizio> getServices(ArrayList<Integer> serv){
@@ -649,13 +651,6 @@ public class Roomify {
         return listaUtenti;
     }
 
-    public Map<Integer, Struttura> getMapStrutture() {
-        return mapStrutture;
-    }
-
-    public HashMap<Integer, Servizio> getServizi() {
-        return servizi;
-    }
 
     public ArrayList<Abbonamento> getListaAbbonamneto() {
         return listaAbbonamneto;
@@ -663,10 +658,6 @@ public class Roomify {
 
     public Map<Integer, RichiestaAssistenza> getListaAssistenza() {
         return listaAssistenza;
-    }
-
-    public RichiestaAssistenza getRichiestaAssistenzaScelta() {
-        return richiestaAssistenzaScelta;
     }
 
 }

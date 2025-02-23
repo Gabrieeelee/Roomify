@@ -33,7 +33,7 @@ public abstract class Menu {
 
     }
 
-    abstract void processaScelta(int scelta) throws LogException;
+    abstract void processaScelta(int scelta) throws Exception;
 
     protected void logout()  {
         sistema.logout();

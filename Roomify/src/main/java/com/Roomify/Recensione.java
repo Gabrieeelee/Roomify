@@ -26,10 +26,6 @@ public class Recensione {
         this.commentoHost = commentoHost;
     }
 
-    public void setRecensioneConclusa(){
-        this.stato = "Concluso";
-    }
-
     public void setStato(String stato) {
         this.stato = stato;
     }
@@ -40,5 +36,25 @@ public class Recensione {
 
     public int getId() {
         return id;
+    }
+
+    public Recensione isRisp(){
+        if(this.stato!="Concluso")
+            return this;
+        else
+            return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Recensione{" +
+                "id=" + id +
+                ", valutazione=" + valutazione +
+                ", commento='" + commento + '\'' +
+                ", cl=" + cl +
+                ", st=" + st +
+                ", stato='" + stato + '\'' +
+                ", commentoHost='" + commentoHost + '\'' +
+                '}';
     }
 }
