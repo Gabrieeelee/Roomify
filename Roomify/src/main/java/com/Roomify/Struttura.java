@@ -15,6 +15,8 @@ public abstract class Struttura {
     private String indirizzo;
     private Host proprietario;
     private ArrayList<Recensione> listRecensioni;
+    //private TariffaStagionale tf;
+    private ArrayList<TariffaStagionale> listatf;
 
     public Struttura(int id, String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo, Host proprietario) {
         this.id = id;
@@ -27,6 +29,7 @@ public abstract class Struttura {
         this.indirizzo = indirizzo;
         this.proprietario = proprietario;
         this.listRecensioni=new ArrayList<>();
+        this.listatf = new ArrayList<>();
     }
 
 
@@ -140,5 +143,12 @@ public abstract class Struttura {
      //   listRecensioni.get(id).setRecensioneConclusa();
     }
 
+    public void inserisciTariffa(String nome, LocalDate datainizio,LocalDate datafine, float fattoreMoltiplicativo){
+         TariffaStagionale tf=new TariffaStagionale(nome,datainizio,datafine,fattoreMoltiplicativo);
+         listatf.add(tf);
+    }
 
+    public ArrayList<TariffaStagionale> getListatf() {
+        return listatf;
+    }
 }

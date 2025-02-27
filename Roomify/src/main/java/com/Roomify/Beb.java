@@ -29,7 +29,6 @@
         }
 
         public ArrayList<Stanza> isAvaible(LocalDate dataInizio, LocalDate dataFine, int nOspiti) {
-
             ArrayList<Stanza> listStanzeDisp = new ArrayList<>();
             Map<String, Stanza> stnBeb =  this.getListaStanze();
             for (Stanza stanza : stnBeb.values()) {

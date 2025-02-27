@@ -12,9 +12,7 @@ public class Host extends Utente{
     private String paesediresidenza;
     private String sedefiscale;
     private Map<Integer,Struttura> listaStrutture;
-    private Abbonamento abbonamento;
-    private LocalDate inizioAbbonamento;
-    private LocalDate fineAbbonamento;
+    private Sottoscrizione sottoscrizione;
 
     public Host(int id,String nome, String cognome, LocalDate dataDiNascita, String codicefiscale, String email, String telefono, String piva, String paesediresidenza, String sedefiscale) {
         super(id,nome, cognome, dataDiNascita, codicefiscale, email, telefono);
@@ -22,6 +20,16 @@ public class Host extends Utente{
         this.paesediresidenza = paesediresidenza;
         this.sedefiscale = sedefiscale;
         this.listaStrutture=new HashMap<>();
+        sottoscrizione=null;
+    }
+
+    public ArrayList<Recensione> visualizzaRecensioni(){
+        ArrayList<Recensione> lis = new ArrayList<>();
+        for (Struttura st : listaStrutture.values()){
+            lis.addAll(st.getListRecensioni());
+        }
+
+        return lis;
     }
 
     public Map<Integer,Struttura> getListaStrutture() {
@@ -32,10 +40,8 @@ public class Host extends Utente{
         this.listaStrutture = listaStrutture;
     }
 
-    public void setAbbonamento(Abbonamento abbonamento) {
-        inizioAbbonamento = LocalDate.now();
-        this.abbonamento = abbonamento;
-        fineAbbonamento = LocalDate.now().plusMonths(12);
+    public void setSottoscrizione(Abbonamento abbonamento) {
+       sottoscrizione=new Sottoscrizione(abbonamento.getId(), abbonamento.getNome(), LocalDate.now(), LocalDate.now().plusMonths(abbonamento.getDurata()), abbonamento);
     }
 
     public RichiestaAssistenza richiestaAssistenzaPrenotazione(int idAss,String descrizione, int id,String stato){
@@ -80,7 +86,9 @@ public class Host extends Utente{
         return richiesta1;
     }
 
-    public Abbonamento getAbbonamento() {
-        return abbonamento;
+    public Sottoscrizione getSottoscrizione(){
+        return this.sottoscrizione;
     }
+
+
 }

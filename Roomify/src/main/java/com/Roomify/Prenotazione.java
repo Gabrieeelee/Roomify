@@ -8,6 +8,7 @@ public class Prenotazione {
     private LocalDate datainizio;
     private LocalDate datafine;
     private String stato;
+    private int nOspiti;
 
     Stanza st;
 
@@ -17,13 +18,20 @@ public class Prenotazione {
     public Prenotazione() {
     }
 
-    public Prenotazione(int id, LocalDate datainizio, LocalDate datafine, String stato, Struttura struttu, Cliente cl) {
+    public Prenotazione(int id, LocalDate datainizio, LocalDate datafine, String stato,int nOspiti, Struttura struttu, Cliente cl) {
         this.id = id;
         this.datainizio = datainizio;
         this.datafine = datafine;
         this.stato = stato;
         this.struttu = struttu;
         this.cl = cl;
+        this.nOspiti = nOspiti;
+    }
+
+    public Prenotazione( LocalDate datainizio, LocalDate datafine,int nOspiti) {
+        this.nOspiti = nOspiti;
+        this.datainizio = datainizio;
+        this.datafine = datafine;
     }
 
     public int getId() {
@@ -71,7 +79,6 @@ public class Prenotazione {
         this.st = st;
     }
 
-
     public void setCl(Cliente cl) {
         this.cl = cl;
     }
@@ -96,6 +103,9 @@ public class Prenotazione {
         return struttu;
     }
 
+    public int getnOspiti() {
+        return nOspiti;
+    }
 
     @Override
     public String toString() {

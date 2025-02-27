@@ -6,6 +6,7 @@ import com.Roomify.Roomify;
 import java.util.Scanner;
 
 public abstract class Menu {
+
     protected static Roomify sistema;
 
     public Menu() {
@@ -35,7 +36,7 @@ public abstract class Menu {
 
     abstract void processaScelta(int scelta) throws Exception;
 
-    protected void logout()  {
+    protected void logout() throws Exception {
         sistema.logout();
     }
 }

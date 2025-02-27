@@ -15,6 +15,7 @@ public class Cliente extends Utente  {
 
     private Map<Integer,Prenotazione> listaPrenotazioniClienti;
     private ArrayList<Recensione> listaRecensioni;
+    private ArrayList<RichiestaAssistenza> listaAssistenza;
 
     public Cliente(int id,String nome, String cognome, LocalDate dataDiNascita, String codicefiscale, String email, String telefono) {
         super(id,nome, cognome, dataDiNascita, codicefiscale, email, telefono);
@@ -25,9 +26,21 @@ public class Cliente extends Utente  {
     public Map<Integer,Struttura> nuovaRecensione(){
         Map<Integer,Struttura> listStruRecensibili= new HashMap<>();
         for (Prenotazione pre: listaPrenotazioniClienti.values()){
+            boolean flag = false;
             if(pre.isRecensibile()!=null){
-                listStruRecensibili.put(pre.isRecensibile().getId(),pre.isRecensibile());
+                for(int i = 0; i < listaRecensioni.size(); i++){
+                    //AGGIUNTO GETST a recensione
+                    if (listaRecensioni.get(i).getSt().getId() == pre.getStruttu().getId()){
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag){
+                    listStruRecensibili.put(pre.isRecensibile().getId(),pre.isRecensibile());
+                }
             }
+
+
         }
         return listStruRecensibili;
     }
@@ -40,7 +53,8 @@ public class Cliente extends Utente  {
     public Map<Integer, Prenotazione> getListaPrenotazioniClienti(LocalDate dataInizio, LocalDate dataFine) {
         Map<Integer,Prenotazione> listaPrenotazioniPeriodo=new HashMap<>();
         for(Prenotazione pren: listaPrenotazioniClienti.values()){
-            if(dataInizio.isBefore(pren.getDatainizio()) && dataFine.isAfter(pren.getDatafine())){
+            if ((dataInizio.isBefore(pren.getDatainizio()) || dataInizio.isEqual(pren.getDatainizio())) &&
+                    (dataFine.isAfter(pren.getDatafine()) || dataFine.isEqual(pren.getDatafine()))) {
                 listaPrenotazioniPeriodo.put(pren.getId(), pren);
             }
         }
@@ -91,9 +105,4 @@ public class Cliente extends Utente  {
     }
 
 
-
-  /*  @Override
-    public void aggiorna(Prenotazione prenotazione) {
-        listaPrenotazioniClienti.put(prenotazione.getId(), prenotazione);
-    }*/
 }

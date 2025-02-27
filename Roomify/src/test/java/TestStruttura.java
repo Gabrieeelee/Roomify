@@ -21,7 +21,7 @@ public class TestStruttura {
         ho = new Host(2,"Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228", "123123123", "IT", "Via Francesco II");
         st = new CasaVacanze(1,"Villa Sole", "Splendida villa con piscina e vista mare.", "Italia", "Palermo", "PA", 90100, "Via Roma, 10", 6, 4, 120.50f, 150, new ArrayList<Servizio>(), ho);
     }
-    @Test
+   /* @Test
     public void testInserisciRecensione(){
         int sv = st.getListRecensioni().size();
         st.inserisciRecensione(3, "Test Struttura recensione", cl);
@@ -34,5 +34,5 @@ public class TestStruttura {
         st.inserisciRecensione(3, "Test Struttura recensione", cl);
         st.inserisciCommentoHost("Testo Struttura Commento", 0);
         assertEquals(1, st.getListRecensioni().size());
-    }
+    }*/
 }

@@ -38,4 +38,8 @@ public class Abbonamento {
     public float getCosto() {
         return costo;
     }
+
+    public int getId() {
+        return id;
+    }
 }

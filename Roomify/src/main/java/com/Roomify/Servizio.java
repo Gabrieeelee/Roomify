@@ -23,4 +23,12 @@ public class Servizio {
         return descrizione;
     }
 
+    @Override
+    public String toString() {
+        return "Servizio{" +
+                "codice=" + codice +
+                ", nome='" + nome + '\'' +
+                ", descrizione='" + descrizione + '\'' +
+                '}';
+    }
 }

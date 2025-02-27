@@ -74,15 +74,6 @@ public class Stanza  {
         return listaprenotazioni;
     }
 
-//era per il pattern observe in caso rimetter implements
-    /*public void aggiorna(Prenotazione pren) {
-        if(pren.getStanza()==this) {
-            listaprenotazioni.put(pren.getId(), pren);
-            }
-    }*/
-
-
-
     public void addPrenotazione(Prenotazione pre){
         listaprenotazioni.put(pre.getId(),pre);
     }
@@ -95,19 +86,13 @@ public class Stanza  {
                     if (pren.getStanza().getId() == this.getId()) {
                         if (dataFine.isBefore(pren.getDatainizio()) || dataInizio.isAfter(pren.getDatafine()) || !(dataInizio.isEqual(pren.getDatainizio())))
                         {
-                            flag=1;
-                            System.out.println("la stanza è libera per la data "+dataInizio+" " + this);
-
+                            return this;
                         }
                         else {
-                            flag=0;
-                            System.out.println("la stanza è occupata per la data "+dataInizio);
-                            break;
+                           return null;
                         }
                     }
                 }
-                if(flag==1) return this;
-                else return null;
             }else{
                 return this;
             }
@@ -115,5 +100,17 @@ public class Stanza  {
         return null;
     }
 
-
+    public String toStrings() {
+        return "Stanza{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", nospiti=" + nospiti +
+                ", prezzopernotte=" + prezzopernotte +
+                ", dimensione=" + dimensione +
+                ", descrizione='" + descrizione + '\'' +
+                ", listaservizi=" + listaservizi +
+                ", listaprenotazioni=" + listaprenotazioni +
+                ", beb=" + beb +
+                '}';
+    }
 }

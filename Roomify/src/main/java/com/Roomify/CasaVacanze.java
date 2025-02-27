@@ -1,5 +1,6 @@
 package com.Roomify;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class CasaVacanze extends Struttura {
@@ -52,21 +53,6 @@ public class CasaVacanze extends Struttura {
         return listaprenotazioni;
     }
 
-    public void inserisciTariffa(String nome, int periodo, float fattoreMoltiplicativo){
-        this.tf = new TariffaStagionale(nome, periodo, fattoreMoltiplicativo);
-        System.out.println("Inizializzati i parametri della tariffa stagionale!");
-
-    }
-
-//era per il pattern observe
-/*    public void aggiorna(Prenotazione prenotazione) {
-            if(prenotazione.getStruttu() instanceof CasaVacanze){
-                if (prenotazione.getStruttu().getId() == this.getId()) {
-                    listaprenotazioni.put(prenotazione.getId(), prenotazione);
-                }
-            }
-        }
-*/
     public int generaNumeroPrenotazione(){
         Random random=new Random();
         while(true){

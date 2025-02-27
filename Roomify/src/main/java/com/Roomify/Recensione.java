@@ -45,6 +45,10 @@ public class Recensione {
             return null;
     }
 
+    public Struttura getSt() {
+        return st;
+    }
+
     @Override
     public String toString() {
         return "Recensione{" +

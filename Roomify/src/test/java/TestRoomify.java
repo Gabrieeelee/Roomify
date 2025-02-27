@@ -20,11 +20,12 @@ public class TestRoomify {
     @BeforeClass
     public static void initTest(){
         roomify=Roomify.getInstance();
+        roomify.populate();
     }
 
 //UC1
     @Test
-    public void inserisciBeb(){
+    public void testinserisciBeb(){
         Host host=new Host(4,"Marco", "Rossi", LocalDate.of(1988, 2, 14), "MRO", "marco.host@test.com", "56789", "3498765432", "IT", "Via Veneto 12");
         roomify.logIn(4);
 
@@ -37,7 +38,7 @@ public class TestRoomify {
     }
 
     @Test
-    public void inserisciCasavacanza(){
+    public void testinserisciCasavacanza(){
         Host host=new Host(4,"Marco", "Rossi", LocalDate.of(1988, 2, 14), "MRO", "marco.host@test.com", "56789", "3498765432", "IT", "Via Veneto 12");
         roomify.logIn(4);
         roomify.inserisciCasavacanza("Un estate al mare", "casa al mare", "italia", "taormina","messina",98034, "via dei licantropi", 2, 2, 300, 100, new ArrayList<>());
@@ -48,7 +49,14 @@ public class TestRoomify {
     }
 
     @Test
-    public void inserisciStanza(){
+    public void testinseriscitariffa(){
+        roomify.logIn(2);
+        roomify.inserisciCasavacanza("Un estate al mare", "casa al mare", "italia", "taormina","messina",98034, "via dei licantropi", 2, 2, 300, 100, new ArrayList<>());
+        roomify.inserisciTariffa("money",LocalDate.of(2025,01,01),LocalDate.of(2025,05,31),1/2);
+        assertNotNull(roomify.getStcorrente().getListatf());
+    }
+    @Test
+    public void testinserisciStanza(){
         Host host=new Host(4,"Marco", "Rossi", LocalDate.of(1988, 2, 14), "MRO", "marco.host@test.com", "56789", "3498765432", "IT", "Via Veneto 12");
         roomify.logIn(4);
 
@@ -186,11 +194,17 @@ public class TestRoomify {
     }
 
     @Test
+    public void testRegistrazionePartner(){
+        assertTrue(roomify.registrazionePartner("Erma", "Florio", LocalDate.of(1999,01,13), "nuovocf", "eree", "323232323", 332));
+
+        assertFalse(roomify.registrazionePartner("Erma", "Florio", LocalDate.of(1999,01,13), "DIDSA", "eree", "323232323", 332));
+    }
+
+    @Test
     public void testSelezionaAbbonamento(){
         roomify.registrazioneHost("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLRqqq", "email2@test.com", "228", "123123123", "IT", "Via Francesco II");
         roomify.selezionaAbbonamento(2);
-
-        assertEquals(roomify.getListaAbbonamneto().get(2).getNome(), ((Host)roomify.getUtenteCorrente()).getAbbonamento().getNome());
+        assertEquals(roomify.getListaAbbonamneto().get(2).getNome(), ((Host)roomify.getUtenteCorrente()).getSottoscrizione().getNome());
         roomify.logout();
     }
 
@@ -211,11 +225,18 @@ public class TestRoomify {
         roomify.logout();
     }
 
+    @Test
+    public  void testSelStrut(){
+        roomify.logIn(8);
+        assertNotNull(roomify.selStrut(8));
+        roomify.logout();
+    }
 
     @Test
-    public void testGetRecensioni(){
+    public void testGetRecComm(){
         roomify.logIn(8);
-        assertNotNull(roomify.getRecensioni(8));
+        roomify.selStrut(8);
+        assertNotNull(roomify.getRecensioniComm());
         roomify.logout();
     }
 
@@ -223,10 +244,11 @@ public class TestRoomify {
     public void testInserisciCommento(){
         roomify.logIn(8);
         //mi serve per selezionare la struttura corrente.
-        ArrayList<Recensione> listRec = roomify.getRecensioni(8);
+        ArrayList<Recensione> listRec = ((Host)roomify.getUtenteCorrente()).getListaStrutture().get(8).getListRecensioni();
         int sv = listRec.size();
+        roomify.selStrut(8);
         roomify.inserisciCommento("Test", 1);
-        assertEquals("Test", listRec.get(1).getCommentoHost());
+        assertEquals("Test", listRec.get(0).getCommentoHost());
         roomify.logout();
     }
 
@@ -286,7 +308,7 @@ public class TestRoomify {
             break;
         }
         roomify.richiestaAssistenza("TESTUC11", id, "Prenotazione");
-        assertEquals(n+1, roomify.getUtenteCorrente().getListaAssistenza().size());
+        assertEquals(n, roomify.getUtenteCorrente().getListaAssistenza().size());
         assertEquals(0, roomify.getListaAssistenza().size());
         roomify.logout();
     }
@@ -361,4 +383,31 @@ public class TestRoomify {
         roomify.confermaMessaggio();
         assertEquals("Chiuso", ra.getStato());
     }
+
+    //UC07
+    @Test
+    public void inseriNuovaPolizza(){
+        roomify.logIn(9);
+        roomify.inseriNuovaPolizza(2, "test", "test", 2, "test");
+        assertEquals(1, ((PartnerAssicurativo)roomify.getUtenteCorrente()).getlPAssCorrente().size());
+    }
+
+    @Test
+    public void confermaInserimento(){
+        roomify.logIn(9);
+        roomify.inseriNuovaPolizza(2, "test", "test", 2, "test");
+        roomify.inseriNuovaPolizza(3, "test", "test", 2, "test");
+        roomify.inseriNuovaPolizza(4, "test", "test", 2, "test");
+        roomify.confermaInserimento();
+        assertEquals(4, ((PartnerAssicurativo)roomify.getUtenteCorrente()).getListapolizze().size());
+
+    }
+
+    @Test
+    public  void visualizzaRecensioni(){
+        roomify.logIn(8);
+        assertNotNull(roomify.visualizzaRecensioni());
+        roomify.logout();
+    }
+
 }

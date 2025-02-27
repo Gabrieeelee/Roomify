@@ -1,13 +1,17 @@
 package com.Roomify;
 
+import java.time.LocalDate;
+
 public class TariffaStagionale {
     private String nome;
-    private int periodo;
+    private LocalDate datainizio;
+    private LocalDate datafine;
     private float fattoreMoltiplicativo;
 
-    public TariffaStagionale(String nome, int periodo, float fattoreMoltiplicativo) {
+    public TariffaStagionale(String nome, LocalDate datainizio,LocalDate datafine, float fattoreMoltiplicativo) {
         this.nome = nome;
-        this.periodo = periodo;
+        this.datainizio = datainizio;
+        this.datafine = datafine;
         this.fattoreMoltiplicativo = fattoreMoltiplicativo;
     }
 }

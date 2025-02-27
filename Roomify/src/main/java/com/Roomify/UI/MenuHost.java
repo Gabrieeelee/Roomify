@@ -1,10 +1,7 @@
 package com.Roomify.UI;
 
-import com.Roomify.Beb;
+import com.Roomify.*;
 import com.Roomify.Exception.LogException;
-import com.Roomify.Prenotazione;
-import com.Roomify.Recensione;
-import com.Roomify.Struttura;
 
 import javax.sound.midi.Soundbank;
 import java.time.LocalDate;
@@ -15,20 +12,14 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class MenuHost extends Menu{
-    @Override
-    void displayMenu() {
-
-    }
-
-    @Override
-    void processaScelta(int scelta) throws Exception {
-
-    }
-
-  /*  protected void displayMenu() {
+    protected void displayMenu() {
         System.out.println("Seleziona un'opzione:");
         System.out.println("1. Inserisci un B&B");
         System.out.println("2. Inserisci una casa vacanze");
+        System.out.println("3. Visualizza prenotazioni");
+        System.out.println("4. Rispondi recensioni");
+        System.out.println("5. Assistenza");
+        System.out.println("6. Visualizza Recensioni");
         System.out.println("7. Logout");
     }
 
@@ -36,26 +27,43 @@ public class MenuHost extends Menu{
     protected void processaScelta(int scelta) throws Exception {
         switch (scelta) {
             case 1:
-                //inserisciBeb();
+                inserisciBeb();
                 break;
             case 2:
-              //  inserisciCasaVacanze();
+                inserisciCasaVacanze();
                 break;
             case 3:
-             //   visualizzaPrenotazioni();
+                visualizzaPrenotazioni();
                 break;
             case 4:
-               // getRecensioniComm();
+                commentaRecensione();
+                break;
+            case 5:
+                richiestaAssistenza();
+                break;
+            case 6:
+                visualizzaRecensioni();
                 break;
             case 7:
                 logout();
+                Menu menu = new LoginMenu();
+                menu.menu();
                 break;
             default:
                 System.out.println("Opzione non valida");
         }
-    }*/
+    }
 
-  /*  private void inserisciBeb(){
+    private void goToMenu(String msg){
+        System.out.println(msg);
+        try {
+            menu();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void inserisciBeb(){
         Scanner input = new Scanner(System.in);
 
         System.out.println("Inserisci nuovo B&B :");
@@ -78,6 +86,7 @@ public class MenuHost extends Menu{
         int cap = input.nextInt();
 
         System.out.println("Inserisci l'indirizzo' del B&B");
+        input.nextLine();
         String indirizzo = input.nextLine();
 
 
@@ -87,36 +96,31 @@ public class MenuHost extends Menu{
             System.out.println(e.getMessage());
             return;
         }
+        boolean inserimento = true;
 
+        while (inserimento){
 
-        System.out.println("Seleziona un'opzione:");
-        System.out.println("1. Inserisci una stanza");
-        System.out.println("2. Termina");
-        while (!input.hasNextInt()) {
-            System.out.println("Inserisci un numero valido.");
-            input.next();
+            System.out.println("Seleziona un'opzione:");
+            System.out.println("1. Inserisci una stanza");
+            System.out.println("2. Conferma inserimento");
+            int inp=input.nextInt();
+
+            switch (inp) {
+                case 1:
+                    inserisciStanza();
+                    break;
+                case 2:
+                    confermaBeb();
+                    inserimento = false;
+                    break;
+                default:
+                    System.out.println("Opzione non valida");
+                    break;
+            }
+
         }
-        int inp=input.nextInt();
-
-        switch (inp) {
-            case 1:
-                inserisciStanza();
-                break;
-            case 2:
-                confermaBeb();
-                break;
-            case 0:
-                logout();
-                break;
-            default:
-                System.out.println("Opzione non valida");
-        }
-
-        System.out.println("Premi invio per terminare l'inserimento del B&B");
-        input.nextLine();
-
-
     }
+
     private void inserisciStanza(){
         Scanner input = new Scanner(System.in);
 
@@ -137,65 +141,77 @@ public class MenuHost extends Menu{
         System.out.println("Inserisci la dimensione della Stanza");
         int dimensione= input.nextInt();
 
-        System.out.println("Inserisci il cap del Stanza");
-        String cap = input.nextLine();
-
         System.out.println("Seleziona i servizi della stanza tra quelli elencati");
-
-
-        System.out.println("Inserisci l'indirizzo' del Stanza");
-        String indirizzo = input.nextLine();
+        Map<Integer, Servizio> map =sistema.getServizi();
+        for (Servizio serv : map.values()){
+            System.out.println(serv.toString());
+        }
+        ArrayList<Integer> servizi = new ArrayList<>();
+        while(true){
+            System.out.println("Inserisci codice servizio\n0 - Chiudi inserimento");
+            int sv = input.nextInt();
+            if (sv == 0){
+                sistema.inserisciStanza(nome, ospiti, prezzopernotte, dimensione, descrizione,servizi);
+                return;
+            }else{
+                servizi.add(sv);
+            }
+        }
     }
-    private void inserisciCasaVacanze() throws LogException {
+
+    private void inserisciCasaVacanze() throws Exception {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Inserisci una nuova Stanza:");
+        System.out.println("Inserisci una nuova casa Vacanze:");
 
-        System.out.print("Inserisci il nome della Stanza: ");
+        System.out.print("Inserisci il nome della casa Vacanze: ");
         String nome = input.nextLine();
 
-        System.out.print("Inserisci la descrizione della Stanza: ");
+        System.out.print("Inserisci la descrizione della casa Vacanze: ");
         String descrizione = input.nextLine();
 
-        System.out.print("Inserisci il paese della Stanza: ");
+        System.out.print("Inserisci il paese della casa Vacanze: ");
         String paese = input.nextLine();
 
-        System.out.print("Inserisci la città della Stanza: ");
+        System.out.print("Inserisci la cittÃ  della casa Vacanze: ");
         String citta = input.nextLine();
 
-        System.out.print("Inserisci la provincia della Stanza: ");
+        System.out.print("Inserisci la provincia della casa Vacanze: ");
         String provincia = input.nextLine();
 
-        System.out.print("Inserisci il CAP della Stanza: ");
+        System.out.print("Inserisci il CAP della casa Vacanze: ");
         int cap = input.nextInt();
         input.nextLine(); // Consuma il newline dopo il nextInt
 
-        System.out.print("Inserisci l'indirizzo della Stanza: ");
+        System.out.print("Inserisci l'indirizzo della casa Vacanze: ");
         String indirizzo = input.nextLine();
 
         System.out.print("Inserisci il numero massimo di ospiti: ");
         int nMaxOspiti = input.nextInt();
 
-        System.out.print("Inserisci il numero di vani della Stanza: ");
+        System.out.print("Inserisci il numero di vani della casa Vacanze: ");
         int nVani = input.nextInt();
 
-        System.out.print("Inserisci il prezzo per notte della Stanza: ");
+        System.out.print("Inserisci il prezzo per notte della casa Vacanze: ");
         float prezzoNotte = input.nextFloat();
 
-        System.out.print("Inserisci la dimensione della Stanza (in mq): ");
+        System.out.print("Inserisci la dimensione della casa Vacanze (in mq): ");
         int dimensione = input.nextInt();
-
-        int inp=input.nextInt();
-
-        switch (inp) {
-            case 1:
-                inserisciStanza();
-                break;
-            case 2:
-                logout();
-                break;
-            default:
-                System.out.println("Opzione non valida");
+        System.out.println("Seleziona i servizi della casa Vacanze tra quelli elencati");
+        Map<Integer, Servizio> map =sistema.getServizi();
+        for (Servizio serv : map.values()){
+            System.out.println(serv.toString());
+        }
+        ArrayList<Integer> servizi = new ArrayList<>();
+        while(true){
+            System.out.println("Inserisci codice servizio\n0 - Chiudi inserimento");
+            int sv = input.nextInt();
+            if (sv == 0){
+                sistema.inserisciCasavacanza(nome, descrizione, paese, citta, provincia, cap, indirizzo, nMaxOspiti, nVani, prezzoNotte, dimensione, servizi );
+                confermaCasaVacanze();
+            }else{
+                servizi.add(sv);
+            }
         }
     }
 
@@ -203,22 +219,25 @@ public class MenuHost extends Menu{
         try {
             sistema.confermaCasaVacanze();
             System.out.println("Casa Vacanze Inserito");
+            goToMenu("Casa Vacanze inserita");
         }catch(Exception e) {
             System.out.println(e.getMessage());
-            return;
+            goToMenu("ERRORE NELL'INSERIMENTO");
         }
-
     }
 
     public void confermaBeb(){
-        //inserire che se non ha stanze non puoi confermare il beb
-        try {
-            sistema.confermaBeB();
-            System.out.println("Casa Vacanze Inserito");
-        }catch(Exception e) {
-            System.out.println(e.getMessage());
-            return;
+        if (((Beb)sistema.getStcorrente()).getListaStanze().size() != 0){
+            try {
+                sistema.confermaBeB();
+                goToMenu("BEB inserito!");
+            }catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }else{
+            goToMenu("Non hai inserito nessuna stanza, ritorno al menu");
         }
+
     }
 
     public void visualizzaPrenotazioni(){
@@ -232,85 +251,39 @@ public class MenuHost extends Menu{
 
         Map<Integer, Prenotazione> prenotazioni = sistema.selezionaStrutturaVis(sv);
 
-        for (Prenotazione pre : prenotazioni.values()){
-            System.out.println("\n");
-            System.out.println(pre.toString());
+        if (!prenotazioni.isEmpty()){
+            for (Prenotazione pre : prenotazioni.values()){
+                System.out.println("\n");
+                System.out.println(pre.toString());
+            }
+            goToMenu("Ecco le prenotazioni! Sono tornato nel menu");
+        }else{
+            goToMenu("Non hai prenotazioni");
         }
-        System.out.println("\nCosa vuoi fare?\n0 - Ritorna al menu principale");
-        sv = scanner.nextInt();
-        switch (sv){
-            case 0:
-                try {
-                    menu();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                break;
-            default:
-                System.out.println("Numero inserito non valido");
-        }
-
-        /*
-        Scanner input = new Scanner(System.in);
-        String sv;
-        LocalDate dataInizio = null;
-        LocalDate dataFine = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        Map<Integer, Prenotazione> map = new HashMap<>();
-
-
-        System.out.println("Inserisci data inizio yyyy-MM-dd");
-        sv = input.nextLine();
-        try{
-            dataInizio = LocalDate.parse(sv, formatter);
-        }catch(Exception e){
-            System.out.println("Formato non valido");
-        }
-
-
-        System.out.println("Inserisci data inizio yyyy-MM-dd");
-        sv = input.nextLine();
-        try{
-            dataFine = LocalDate.parse(sv, formatter);
-        }catch(Exception e){
-            System.out.println("Formato non valido");
-        }
-        if(dataInizio != null && dataFine != null){
-            map = sistema.visualizzaPrenotazioniCliente(dataInizio, dataFine);
-        }
-        for(Prenotazione pre : map.values()){
-            System.out.println(pre.toString());
-        }
-        int num;
-        System.out.println("Scegli una prenotazione:");
-        num = input.nextInt();
-
-        if (map.containsKey(num)){
-
-        }*/
-  //  }
-
-/*    public void commentaRecensione(){
-        Map<Integer, Struttura> map = sistema.commentaRecensione();
-        Scanner scanner = new Scanner(System.in);
-        Struttura st;
-        for (Struttura stn : map.values()){
-            System.out.println("\n");
-            System.out.println(stn.toString());
-        }
-
     }
 
-    public void selStrut() throws Exception {
+
+    //UC13
+    public void commentaRecensione() throws Exception {
+        Map<Integer, Struttura> map = sistema.commentaRecensione();
         Scanner scanner = new Scanner(System.in);
-        int id = 0;
-        System.out.println("\nInserisci id");
-        id = scanner.nextInt();
-        if (id != 0){
-            sistema.selStrut(id);
-            System.out.println("Struttura selezionata");
-            getRecensioniComm();
+        for (Struttura stn : map.values()) {
+            System.out.println(stn.toString());
         }
+        int id;
+        while (true){
+            System.out.println("Scegli la recensione");
+            id = scanner.nextInt();
+            if (map.containsKey(id)) {
+                break;
+            }
+        }
+        selStrut(id);
+    }
+
+    public void selStrut(int id) throws Exception {
+        sistema.selStrut(id);
+        getRecensioniComm();
 
     }
 
@@ -318,16 +291,30 @@ public class MenuHost extends Menu{
         ArrayList<Recensione> listRec = sistema.getRecensioniComm();
         Scanner scanner = new Scanner(System.in);
 
-        for (int i = 0; i < listRec.size(); i++){
-            System.out.println("\n");
-            System.out.println(listRec.get(i).toString());
-        }
-        System.out.println("\nSeleziona recensione da commentare:");
-        int id = scanner.nextInt();
-        for(int i = 0; i< listRec.size(); i++){
-            if(listRec.get(i).getId() == id){
-                inserisciCommento(id);
+        if (!listRec.isEmpty()){
+            for (int i = 0; i < listRec.size(); i++){
+                System.out.println(listRec.get(i).toString());
             }
+            int id = 0;
+            boolean trv = true;
+            while (trv){
+                System.out.println("Scegli la Struttura");
+                id = scanner.nextInt();
+                for (int i = 0; i < listRec.size(); i++){
+                    if (listRec.get(i).getId() == id){
+                        trv = false;
+                        break;
+                    }
+                }
+            }
+
+            if (id != 0){
+                inserisciCommento(id);
+            }else{
+                goToMenu("Errore nell'inserimento della struttura");
+            }
+        }else{
+            goToMenu("Non hai recensioni");
         }
 
     }
@@ -337,23 +324,180 @@ public class MenuHost extends Menu{
         System.out.println("\nInserisci commento:");
         String commento = scanner.nextLine();
         sistema.inserisciCommento(commento, id);
-        menu();
+        goToMenu("Commento inserito!");
     }
 
-   /* public void richiestaAssistenza(){
+
+    public void richiestaAssistenza(){
         Scanner scanner = new Scanner(System.in);
-        String scelta = "";
-        System.out.println("\nInserisci la tipologia di assistenza.\n1 -  Prenotazione\n2 - Recensione\n3 - Generale");
-        int sv = scanner.nextInt();
+        String slt = null;
+        System.out.println("\nScegli la tipologia di assistenza");
+        System.out.println("1 - Prenotazione");
+        System.out.println("2 - Recensione");
+        System.out.println("3 - Generale");
+        int sv = 0;
+        int num = 0;
+        String str = null;
 
-        System.out.println("\n");
-        int sv = scanner.nextInt();
+        while (sv != 3 && sv != 1 && sv != 2) {
+            sv = scanner.nextInt();
+            switch (sv){
+                case 1:
+                    slt = "Prenotazione";
+                    Map<Integer, Struttura> mapStrutture = ((Host)sistema.getUtenteCorrente()).getListaStrutture();
+                    if (!mapStrutture.isEmpty()) {
+                        for (Struttura strutture : mapStrutture.values()){
+                            System.out.println(strutture.toString());
+                        }
 
-        switch (sv){
-            case 1:
+                        int id;
+                        while (true){
+                            System.out.println("Scegli la struttura");
+                            id = scanner.nextInt();
+                            if (mapStrutture.containsKey(id)) break;
+                        }
 
-                break;
+                        if(mapStrutture.get(id) instanceof Beb){
+                            Map<String, Stanza> mapStanze =((Beb) mapStrutture.get(id)).getListaStanze();
+                            for (Stanza stanza : mapStanze.values()){
+                                System.out.println(stanza.toStrings());
+                            }
+                            String svs;
+                            while (true){
+                                System.out.println("Scegli la stanza");
+                                scanner.nextLine();
+                                svs = scanner.nextLine();
+                                if (mapStanze.containsKey(svs)) break;
+                            }
+                            Map<Integer, Prenotazione> mappaPrenotazioni= mapStanze.get(svs).getListaprenotazioni();
+                            if (!mappaPrenotazioni.isEmpty()){
+                                for (Prenotazione pre : mappaPrenotazioni.values()){
+                                    System.out.println(pre.toString());
+                                }
+                                while (true){
+                                    System.out.println("Scegli la prenotazione");
+                                    id = scanner.nextInt();
+                                    if (mappaPrenotazioni.containsKey(id)) {
+                                        num = id;
+                                        break;
+                                    }
+                                }
+                                System.out.println("Inserisci descrizione del problema");
+                                scanner.nextLine();
+                                str = scanner.nextLine();
+                            }else{
+                                goToMenu("Non hai prenotazioni.");
+                            }
+                        }else{
+                            Map<Integer, Prenotazione> mappaPrenotazioni = ((CasaVacanze)mapStrutture.get(id)).getListaprenotazioni();
+                            if (!mappaPrenotazioni.isEmpty()){
+                                for (Prenotazione pre : mappaPrenotazioni.values()){
+                                    System.out.println(pre.toString());
+                                }
+                                while (true){
+                                    System.out.println("Scegli la prenotazione");
+                                    id = scanner.nextInt();
+                                    if (mappaPrenotazioni.containsKey(id)) {
+                                        num = id;
+                                        break;
+                                    }
+                                }
+                                System.out.println("Inserisci descrizione del problema");
+                                scanner.nextLine();
+                                str = scanner.nextLine();
+                            }else{
+                                goToMenu("Non hai prenotazioni.");
+                            }
+                        }
+                    }else {
+                        goToMenu("Non hai strutture");
+                    }
+                    break;
+                case 2:
+                    slt = "Recensione";
+                    Map<Integer, Struttura> mapStruttureRecensioni = ((Host)sistema.getUtenteCorrente()).getListaStrutture();
+                    if (!mapStruttureRecensioni.isEmpty()) {
+                        for (Struttura strutture : mapStruttureRecensioni.values()) {
+                            System.out.println(strutture.toString());
+                        }
+
+                        int id;
+                        while (true) {
+                            System.out.println("Scegli la struttura");
+                            id = scanner.nextInt();
+                            if (mapStruttureRecensioni.containsKey(id)) break;
+                        }
+                        ArrayList<Recensione> listaRecensioni = mapStruttureRecensioni.get(id).getListRecensioni();
+                        if (!listaRecensioni.isEmpty()){
+                            for (int i = 0; i < listaRecensioni.size(); i++){
+                                System.out.println(listaRecensioni.get(i).toString());
+                            }
+                            boolean trov = true;
+                            while (trov) {
+                                System.out.println("Scegli la recensione");
+                                id = scanner.nextInt();
+                                for (int i = 0; i < listaRecensioni.size(); i++){
+                                    if (listaRecensioni.get(i).getId() == id){
+                                        trov = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            num = id;
+                            System.out.println("Inserisci descrizione del problema");
+                            scanner.nextLine();
+                            str = scanner.nextLine();
+                        }else{
+                            goToMenu("Recensioni non disponibili per questa struttura");
+                        }
+                    }else {
+                        goToMenu("Non hai strutture");
+                    }
+                    break;
+                case 3:
+                    slt = "Generale";
+                    num = 3;
+                    System.out.println("Inserisci descrizione del problema");
+                    scanner.nextLine();
+                    str = scanner.nextLine();
+                    break;
+                default:
+                    System.out.println("Scegli di nuovo");
+                    break;
+            }
+            if (str!= null && num != 0 && slt != null)  {
+                sistema.richiestaAssistenza(str, num, slt);
+                confermaAsisstenza();
+            }else{
+                goToMenu("C'è stato un errore sull'inserimento dei dati per la richiesta di assistenza");
+            }
         }
-    }*/
+    }
 
+    public void confermaAsisstenza(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Vuoi confermare la richiesta?\nDigita CONFERMA");
+        String sv = scanner.nextLine();
+        if (sv.equals("CONFERMA")){
+            sistema.confermaAssistenza();
+            goToMenu("Richiesta assistenza inoltrata!");
+        }else{
+            goToMenu("Richiesta assistenza non inoltrata!");
+        }
+    }
+
+    public void visualizzaRecensioni(){
+        ArrayList<Recensione> sv = sistema.visualizzaRecensioni();
+
+
+        if(sv.isEmpty()){
+            goToMenu("Non ci sono recensioni");
+        }else{
+            for(int i = 0; i < sv.size(); i++){
+                System.out.println(sv.toString());
+            }
+            goToMenu("Ecco le recensioni, torno al menu.");
+
+        }
+    }
 }
