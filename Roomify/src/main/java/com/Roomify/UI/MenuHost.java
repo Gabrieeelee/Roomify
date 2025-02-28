@@ -242,15 +242,20 @@ public class MenuHost extends Menu{
 
     public void visualizzaPrenotazioni(){
         Map<Integer, Struttura> map = sistema.visualizzaPrenotazioni();
+        int sv;
         Scanner scanner = new Scanner(System.in);
         for(Struttura st : map.values()){
             System.out.println(st.toString());
         }
-        System.out.println("\nScegli la struttura");
-        int sv = scanner.nextInt();
+        while(true) {
+            System.out.println("\nScegli la struttura");
+             sv = scanner.nextInt();
+            if(map.containsKey(sv))
+                break;
+            System.out.println("Non possiedi questa struttura, inseriscine una di tua proprietà");
 
+        }
         Map<Integer, Prenotazione> prenotazioni = sistema.selezionaStrutturaVis(sv);
-
         if (!prenotazioni.isEmpty()){
             for (Prenotazione pre : prenotazioni.values()){
                 System.out.println("\n");
@@ -355,6 +360,7 @@ public class MenuHost extends Menu{
                             System.out.println("Scegli la struttura");
                             id = scanner.nextInt();
                             if (mapStrutture.containsKey(id)) break;
+                            System.out.println("Questa struttura non è tua");
                         }
 
                         if(mapStrutture.get(id) instanceof Beb){
@@ -368,6 +374,8 @@ public class MenuHost extends Menu{
                                 scanner.nextLine();
                                 svs = scanner.nextLine();
                                 if (mapStanze.containsKey(svs)) break;
+
+                                System.out.println("Questa stanza non esiste");
                             }
                             Map<Integer, Prenotazione> mappaPrenotazioni= mapStanze.get(svs).getListaprenotazioni();
                             if (!mappaPrenotazioni.isEmpty()){
@@ -381,6 +389,7 @@ public class MenuHost extends Menu{
                                         num = id;
                                         break;
                                     }
+                                    System.out.println("Questa prenotazione non corrisponde ad una delle tue strutture");
                                 }
                                 System.out.println("Inserisci descrizione del problema");
                                 scanner.nextLine();
@@ -401,6 +410,8 @@ public class MenuHost extends Menu{
                                         num = id;
                                         break;
                                     }
+
+                                    System.out.println("Questa prenotazione non corrisponde ad una delle tue strutture");
                                 }
                                 System.out.println("Inserisci descrizione del problema");
                                 scanner.nextLine();
@@ -426,6 +437,8 @@ public class MenuHost extends Menu{
                             System.out.println("Scegli la struttura");
                             id = scanner.nextInt();
                             if (mapStruttureRecensioni.containsKey(id)) break;
+
+                            System.out.println("Questa struttura non è tua");
                         }
                         ArrayList<Recensione> listaRecensioni = mapStruttureRecensioni.get(id).getListRecensioni();
                         if (!listaRecensioni.isEmpty()){
@@ -442,6 +455,7 @@ public class MenuHost extends Menu{
                                         break;
                                     }
                                 }
+                                System.out.println("Questa recensione non corrisponde ad una delle tue strutture");
                             }
                             num = id;
                             System.out.println("Inserisci descrizione del problema");

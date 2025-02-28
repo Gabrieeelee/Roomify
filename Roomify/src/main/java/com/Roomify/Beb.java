@@ -20,7 +20,6 @@
         public Stanza inserisciStanza(int id,String nome,int nospiti, float prezzopernotte, int dimensione,String descrizione, ArrayList<Servizio> listaServizi,Beb beb){
             Stanza st=new Stanza(id,nome, nospiti, prezzopernotte, dimensione, descrizione, listaServizi,beb);
             listaStanze.put(nome, st);
-            System.out.println("Inserimento stanza: "+ nome +"-> completato!");
             return st;
         }
 

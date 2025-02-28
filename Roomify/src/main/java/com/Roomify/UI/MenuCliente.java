@@ -1,10 +1,7 @@
 package com.Roomify.UI;
 
 import com.Roomify.*;
-import com.Roomify.Exception.LogException;
 
-import javax.sql.rowset.serial.SQLOutputImpl;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -20,6 +17,7 @@ public class MenuCliente extends Menu {
         System.out.println("3. Annulla prenotazione");
         System.out.println("4. Recensisci struttura");
         System.out.println("5. Assistenza");
+        System.out.println("6. Aggiungi Assicurazione");
         System.out.println("7. Logout");
     }
 
@@ -43,6 +41,9 @@ public class MenuCliente extends Menu {
                 case 5:
                     richiestaAssistenza();
                     break;
+                case 6:
+                    aggiungiAssicurazione();
+                    break;
                 case 7:
                     logout();
                     Menu menu = new LoginMenu();
@@ -64,30 +65,42 @@ public class MenuCliente extends Menu {
     }
 
     private void prenotaAlloggio() throws Exception {
+        boolean a=true;
+        ArrayList<Struttura> str;
         Scanner input = new Scanner(System.in);
-        LocalDate dataInizio = null;
-        LocalDate dataFine = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        do {
+            a=true;
+            LocalDate dataInizio = null;
+            LocalDate dataFine = null;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        System.out.println("Inserisci città:");
-        String citta = input.nextLine();
+            System.out.println("Inserisci città:");
+            String citta = input.nextLine();
 
-        System.out.println("Inserisci data inizio nel formato YYYY-MM-DD:");
-        String dataIn = input.nextLine();
+            System.out.println("Inserisci data inizio nel formato YYYY-MM-DD:");
+            String dataIn = input.nextLine();
 
-        System.out.println("Inserisci data fine nel formato YYYY-MM-DD:");
-        String dataFi = input.nextLine();
-        try {
-            dataInizio= LocalDate.parse(dataIn, formatter);
-            dataFine = LocalDate.parse(dataFi, formatter);
-        } catch (DateTimeParseException e) {
-            System.out.println("Formato data non valido. Assicurati di usare il formato yyyy-MM-dd.");
-        }
+            System.out.println("Inserisci data fine nel formato YYYY-MM-DD:");
+            String dataFi = input.nextLine();
+            try {
+                dataInizio = LocalDate.parse(dataIn, formatter);
+                dataFine = LocalDate.parse(dataFi, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato data non valido. Assicurati di usare il formato yyyy-MM-dd.");
+            }
 
-        System.out.println("Inserisci numeri di ospiti: ");
-        int nOspiti = input.nextInt();
+            System.out.println("Inserisci numeri di ospiti: ");
+            int nOspiti = input.nextInt();
 
-        ArrayList<Struttura> str = sistema.prenotaAlloggio(citta, dataInizio, dataFine, nOspiti);
+             str = sistema.prenotaAlloggio(citta, dataInizio, dataFine, nOspiti);
+
+            if(str.isEmpty()){
+                a=false;
+                System.out.println("Non abbiamo trovato nessun alloggio per queste date e questa città. Riprova!");
+                input.nextLine();
+            }
+        }while(!a);
+
         for (int i = 0; i < str.size(); i++){
             System.out.println(str.get(i).toString());
             System.out.println("\n");
@@ -155,6 +168,7 @@ public class MenuCliente extends Menu {
         goToMenu("Prenotazione confermata!");
     }
 
+    //UC4
     public void visualizzaPrenotazioniCliente(){
         Scanner input = new Scanner(System.in);
         String sv;
@@ -181,7 +195,7 @@ public class MenuCliente extends Menu {
             System.out.println("Formato non valido");
         }
         if(dataInizio != null && dataFine != null){
-            //HO SISTEMATO l'if nel cliente
+
             map = sistema.visualizzaPrenotazioniCliente(dataInizio, dataFine);
         }
         if (!map.values().isEmpty()){
@@ -193,7 +207,8 @@ public class MenuCliente extends Menu {
         }
         goToMenu("Esco dal menu visualizza prenotazione");
     }
-    //UC4
+
+    //UC5
     public void annullaPrenotazione(){
         Scanner scanner = new Scanner(System.in);
         Map<Integer, Prenotazione> map = sistema.annullaPrenotazione();
@@ -231,9 +246,16 @@ public class MenuCliente extends Menu {
             for(Struttura st : map.values()){
                 System.out.println("\n"+st.toString());
             }
-            System.out.println("\nInserisci id struttura:");
-            int id = scanner.nextInt();
-            selezionaStrutturaRec(id);
+            do {
+                System.out.println("\nInserisci id struttura:");
+                int id = scanner.nextInt();
+                if (map.containsKey(id)) {
+                    selezionaStrutturaRec(id);
+                    break;
+                } else {
+                    System.out.println("Non hai alloggiato in questa struttura, scegline una in cui hai alloggiato!");
+                }
+            }while(true);
         }else{
             goToMenu("Non hai nessuna recensione da effettuare");
         }
@@ -285,6 +307,7 @@ public class MenuCliente extends Menu {
                             if (map.containsKey(num)){
                                 break;
                             }
+                            System.out.println("Questa prenotazione non corrisponde ad una delle tue");
                         }
 
                         System.out.println("Inserisci descrizione del problema");
@@ -294,52 +317,7 @@ public class MenuCliente extends Menu {
                     }else{
                         goToMenu("Hai 0 prenotazioni");
                     }
-                    /*if (sistema.getUtenteCorrente() instanceof Cliente){
-                        Map<Integer, Prenotazione> map = ((Cliente)sistema.getUtenteCorrente()).getListaPrenotazioniClienti();
-                        if(map.size() != 0){
-                            for(Prenotazione pre : map.values()){
-                                System.out.println(pre.toString());
-                            }
-                            System.out.println("Scegli l'ìd della prenotazione:");
-                            num = scanner.nextInt();
 
-                            System.out.println("Inserisci descrizione del problema");
-                            str = scanner.nextLine();
-                        }else{
-                            goToMenu("Hai 0 prenotazioni");
-                        }
-                    }else if(sistema.getUtenteCorrente() instanceof Host){
-                        Map<Integer, Struttura> map = ((Host)sistema.getUtenteCorrente()).getListaStrutture();
-                        if(map.size() != 0){
-                            for(Struttura struttura : map.values()){
-                                System.out.println(struttura.toString());
-                            }
-                            System.out.println("Scegli l'ìd della struttura:");
-                            int id = scanner.nextInt();
-
-                            if (map.get(id) instanceof Beb){
-                                Map<String, Stanza> listStanze =((Beb)map.get(id)).getListaStanze();
-                                for (Stanza stnz:listStanze.values()){
-                                    System.out.println(stnz.toStrings());
-                                }
-                                int i =0;
-                                while (i< 3){
-                                    System.out.println("Scegli la stanza:");
-                                    id = scanner.nextInt();
-                                    if (listStanze.containsKey(id)){
-                                        Map<Integer, Prenotazione> prenotazioni =listStanze.get(id).getListaprenotazioni();
-                                        if (Prenotazione pre : prenotazioni.values()){
-
-                                        }
-                                    }
-                                    i++;
-                                }
-                                goToMenu("Stanza sbagliata, torno nel menu");
-                            }
-                        }else{
-                            goToMenu("Hai 0 prenotazioni");
-                        }
-                    }*/
                     break;
                 case 2:
                     slt = "Recensione";
@@ -357,7 +335,7 @@ public class MenuCliente extends Menu {
                                     i = 4;
                                 }
                             }
-
+                            System.out.println("Questa recensione non corrisponde ad una delle tue");
                         }
                     }else{
                         goToMenu("Nessuna Recensione");
@@ -395,6 +373,80 @@ public class MenuCliente extends Menu {
             goToMenu("Richiesta assistenza inoltrata!");
         }else{
             goToMenu("Richiesta assistenza non inoltrata!");
+        }
+    }
+
+    //UC10
+    public void aggiungiAssicurazione() {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Prenotazione> sv = sistema.aggiungiAssicurazione();
+        for (int i = 0; i < sv.size(); i++) {
+            System.out.println(sv.get(i).toString());
+        }
+        int id = 0;
+        boolean trvt = true;
+        while (trvt) {
+            System.out.println("Inserisci id:");
+            id = scanner.nextInt();
+            for (int i = 0; i < sv.size(); i++) {
+                if (sv.get(i).getId() == id) {
+                    trvt = false;
+                    break;
+                }
+            }
+            if(trvt)
+                System.out.println("La prenotazione scelta non è esistente");
+        }
+        selPren(id);
+
+
+    }
+
+    public void selPren(int id){
+        sistema.selPren(id);
+        mostraPolizze();
+    }
+
+    public void mostraPolizze() {
+        Scanner scanner = new Scanner(System.in);
+
+        ArrayList<PolizzaAssicurativa> sv = sistema.mostraPolizze();
+        for (int i = 0; i < sv.size(); i++) {
+            System.out.println(sv.get(i).toString());
+        }
+        int j=0;
+        int id = 0;
+        boolean trvt = true;
+        while (trvt) {
+            System.out.println("Inserisci id:");
+            id = scanner.nextInt();
+            for (int i = 0; i < sv.size(); i++) {
+                if (sv.get(i).getId() == id) {
+                    j=i;
+                    trvt = false;
+                    break;
+                }
+            }
+        }
+
+        selezionaPolizza(sv.get(j).getPartnerAssicurativo().getId(),id);
+    }
+
+    private void selezionaPolizza(int idPartner, int idPolizza) {
+        sistema.selezionaPolizza(idPartner, idPolizza);
+        confermaAssicurazione();
+    }
+
+    private void confermaAssicurazione() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Vuoi confermare l'assicurazioen?\nDigita CONFERMA");
+        scanner.nextLine();
+        String sv = scanner.nextLine();
+        if (sv.equals("CONFERMA")){
+            sistema.confermaAssicurazione();
+            goToMenu("Assicurazione effettuata");
+        }else{
+            goToMenu("Assicurazione non inserita");
         }
     }
 }

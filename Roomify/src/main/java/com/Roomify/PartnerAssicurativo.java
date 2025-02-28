@@ -25,8 +25,9 @@ private ArrayList<PolizzaAssicurativa> lPAssCorrente;
     public Map<Integer, PolizzaAssicurativa> getListapolizze() {
         return listapolizze;
     }
+
     public void inseriNuovaPolizza(int id, String tipo, String copertura, int durata, String stato){
-        lPAssCorrente.add(new PolizzaAssicurativa(generaNumeroId(), tipo, copertura, durata, stato));
+        lPAssCorrente.add(new PolizzaAssicurativa(generaNumeroId(), tipo, copertura, durata, stato,this));
     }
 
     public int generaNumeroId(){
@@ -49,7 +50,22 @@ private ArrayList<PolizzaAssicurativa> lPAssCorrente;
     public void annullaInserimento(){
         lPAssCorrente.removeAll(lPAssCorrente);
     }
+
     public ArrayList<PolizzaAssicurativa> getlPAssCorrente() {
         return lPAssCorrente;
+    }
+
+    public ArrayList<PolizzaAssicurativa> mostraPolizze(int durata){
+        ArrayList<PolizzaAssicurativa> listaPolizzeDisp = new ArrayList<>();
+        for (PolizzaAssicurativa pa : listapolizze.values()){
+            if(pa.isOk(durata)){
+                listaPolizzeDisp.add(pa);
+            }
+        }
+        return listaPolizzeDisp;
+    }
+
+    public PolizzaAssicurativa getPolizza(int id){
+        return listapolizze.get(id);
     }
 }

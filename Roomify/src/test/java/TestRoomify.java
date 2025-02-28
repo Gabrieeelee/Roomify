@@ -387,27 +387,66 @@ public class TestRoomify {
     //UC07
     @Test
     public void inseriNuovaPolizza(){
-        roomify.logIn(9);
+        roomify.logIn(10);
         roomify.inseriNuovaPolizza(2, "test", "test", 2, "test");
         assertEquals(1, ((PartnerAssicurativo)roomify.getUtenteCorrente()).getlPAssCorrente().size());
     }
 
     @Test
     public void confermaInserimento(){
-        roomify.logIn(9);
+        roomify.logIn(10);
         roomify.inseriNuovaPolizza(2, "test", "test", 2, "test");
         roomify.inseriNuovaPolizza(3, "test", "test", 2, "test");
         roomify.inseriNuovaPolizza(4, "test", "test", 2, "test");
         roomify.confermaInserimento();
-        assertEquals(4, ((PartnerAssicurativo)roomify.getUtenteCorrente()).getListapolizze().size());
+        assertEquals(3, ((PartnerAssicurativo)roomify.getUtenteCorrente()).getListapolizze().size());
 
     }
-
+//uc14
     @Test
     public  void visualizzaRecensioni(){
         roomify.logIn(8);
         assertNotNull(roomify.visualizzaRecensioni());
         roomify.logout();
     }
+
+    //UC10
+    @Test
+    public void testAggiungiAssicurazione(){
+        roomify.logIn(5);
+        assertNotNull(roomify.aggiungiAssicurazione());
+        roomify.logout();
+    }
+
+    @Test
+    public void testSelPren(){
+        roomify.logIn(5);
+        ArrayList<Prenotazione> sv = roomify.aggiungiAssicurazione();
+        assertNotNull(roomify.selPren(sv.get(0).getId()));
+        roomify.logout();
+    }
+
+    @Test
+    public void testMostraPolizze(){
+        roomify.logIn(5);
+        ArrayList<Prenotazione> sv = roomify.aggiungiAssicurazione();
+        roomify.selPren(sv.get(0).getId());
+        assertNotNull(roomify.mostraPolizze());
+        roomify.logout();
+    }
+
+    @Test
+    public void testSelezionaPolizza(){
+        roomify.logIn(5);
+        ArrayList<Prenotazione> sv = roomify.aggiungiAssicurazione();
+        Prenotazione pre = roomify.selPren(sv.get(0).getId());
+        ArrayList<PolizzaAssicurativa> svs =  roomify.mostraPolizze();
+        roomify.selezionaPolizza(svs.get(0).getPartnerAssicurativo().getId(), svs.get(0).getId());
+        assertNotNull(pre.getPolizza());
+        roomify.logout();
+    }
+
+
+
 
 }

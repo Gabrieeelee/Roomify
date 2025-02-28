@@ -47,7 +47,6 @@ public class Cliente extends Utente  {
 
     public void addPrenotazione(Prenotazione pre){
         listaPrenotazioniClienti.put(pre.getId(), pre);
-        System.out.println("Inserito prenotazione: "+pre.toString());
     }
 
     public Map<Integer, Prenotazione> getListaPrenotazioniClienti(LocalDate dataInizio, LocalDate dataFine) {
@@ -102,6 +101,22 @@ public class Cliente extends Utente  {
         //addListaAssistenza(richiesta1);
         setRichiestaAssistenzacorr(richiesta1);
         return richiesta1;
+    }
+
+    //UC10
+    public ArrayList<Prenotazione> getPrenotazioniAss(){
+        ArrayList<Prenotazione> listaPrenAss = new ArrayList<>();
+        for (Prenotazione pre : listaPrenotazioniClienti.values()){
+            if (pre.isAssicurabile()){
+                listaPrenAss.add(pre);
+            }
+        }
+
+        return listaPrenAss;
+    }
+
+    public Prenotazione selezionaPrenotazione(int id){
+        return listaPrenotazioniClienti.get(id);
     }
 
 

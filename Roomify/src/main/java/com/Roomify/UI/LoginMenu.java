@@ -17,6 +17,7 @@ public class LoginMenu extends Menu  {
     private static MenuCliente mc;
     private static MenuHost mh;
     private static MenuPartner mpa;
+    private static MenuAmministratore ma;
     @Override
     void displayMenu() {
         System.out.println("Benvenuto! Seleziona un'opzione:");
@@ -49,6 +50,10 @@ public class LoginMenu extends Menu  {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Inserisci il tuo identificativo:");
         int id = scanner.nextInt();
+        if(id == 99){
+            ma = new MenuAmministratore();
+            ma.menu();
+        }
         // Cerca l'utente con l'identificativo fornito
         Utente user = sistema.getUtente(id);
         if (user == null) {
@@ -76,7 +81,7 @@ public class LoginMenu extends Menu  {
     }
 
     //funziona
-    private static void registrati() throws LogException {
+    private  void registrati() throws LogException {
         LocalDate data = null;
         Scanner scanner = new Scanner(System.in);
 
@@ -126,7 +131,9 @@ public class LoginMenu extends Menu  {
                 System.out.println("Inserisci la tua sede fiscale:");
                 String sedefiscale = scanner.nextLine();
 
-                sistema.registrazioneHost( nome,cognome, data, cf, email, ntelefono, piva, paesediresidenza, sedefiscale);
+                if(!sistema.registrazioneHost( nome,cognome, data, cf, email, ntelefono, piva, paesediresidenza, sedefiscale)){
+                    goToMenu("Sei gia registrato come Host, puoi avere un solo account intestato a te!");
+                }
 
                 ArrayList<Abbonamento> listAbb = sistema.getListaAbbonamneto();
                 //fare to string degli abbonamenti se non ci sono
@@ -155,10 +162,10 @@ public class LoginMenu extends Menu  {
                     System.out.println("Non hai confermato");
                 }
 
-                System.out.println("Il tuo identificativo e': " + sistema.getUtenteCorrente().getId());
-                //   throw new LoginHostException();
             case 2:
-                sistema.registrazioneCliente(nome, cognome, data, cf, email, ntelefono);
+                if(!sistema.registrazioneCliente(nome, cognome, data, cf, email, ntelefono)){
+                    goToMenu("Sei gia registrato come Cliente, puoi avere un solo account intestato a te!");
+                }
                 System.out.println("Vuoi confermare la registrazione?\nDigita CONFERMA");
                 scanner.nextLine();
                 String svs = scanner.nextLine();
@@ -174,7 +181,9 @@ public class LoginMenu extends Menu  {
                 System.out.println("Inserisci il numero di licenza:");
                 int nlicenza = scanner.nextInt();
 
-                sistema.registrazionePartner(nome, cognome, data, cf, ntelefono, email, nlicenza);
+                if(!sistema.registrazionePartner(nome, cognome, data, cf, ntelefono, email, nlicenza)){
+                    goToMenu("Sei gia registrato come Partner Assicurativo, puoi avere un solo account intestato a te!");
+                }
                 System.out.println("Vuoi confermare la registrazione?\nDigita CONFERMA");
                 scanner.nextLine();
                 String conferma = scanner.nextLine();
@@ -195,5 +204,14 @@ public class LoginMenu extends Menu  {
 
     public void chiudi() throws LogException {
       System.exit(0);
+    }
+
+    private void goToMenu(String msg){
+        System.out.println(msg);
+        try {
+            menu();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

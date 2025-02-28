@@ -42,4 +42,14 @@ import java.util.ArrayList;
         }
 
 
+        @Override
+        public String toString() {
+            return "RichiestaAssistenza{" +
+                    "id=" + id +
+                    ", descrizione='" + descrizione + '\'' +
+                    ", utente=" + utente +
+                    ", stato='" + stato + '\'' +
+                    ", listaMessaggi=" + listaMessaggi +
+                    '}';
+        }
     }

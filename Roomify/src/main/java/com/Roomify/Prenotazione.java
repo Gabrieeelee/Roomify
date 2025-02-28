@@ -1,14 +1,17 @@
 package com.Roomify;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Prenotazione {
 
     private int id;
     private LocalDate datainizio;
     private LocalDate datafine;
+    private LocalDate dataPrenotazione;
     private String stato;
     private int nOspiti;
+    private PolizzaAssicurativa polizza;
 
     Stanza st;
 
@@ -26,12 +29,15 @@ public class Prenotazione {
         this.struttu = struttu;
         this.cl = cl;
         this.nOspiti = nOspiti;
+        this.dataPrenotazione=LocalDate.now();
     }
+
 
     public Prenotazione( LocalDate datainizio, LocalDate datafine,int nOspiti) {
         this.nOspiti = nOspiti;
         this.datainizio = datainizio;
         this.datafine = datafine;
+        this.dataPrenotazione=LocalDate.now();
     }
 
     public int getId() {
@@ -127,5 +133,29 @@ public class Prenotazione {
         }
         else
             return null;
+    }
+
+    public boolean isAssicurabile(){
+        if (LocalDate.now().isBefore(datainizio) && ChronoUnit.DAYS.between(LocalDate.now(), dataPrenotazione) <= 3){
+            return true;
+        }
+
+        return false;
+    }
+
+    public void addPolizza(PolizzaAssicurativa polizza) {
+        this.polizza = polizza;
+    }
+
+    public int getDurata(){
+        return (int) ChronoUnit.DAYS.between(this.getDatainizio(), this.getDatafine());
+    }
+
+    public PolizzaAssicurativa getPolizza() {
+        return polizza;
+    }
+
+    public void setDataPrenotazione(LocalDate dataPrenotazione) {
+        this.dataPrenotazione = dataPrenotazione;
     }
 }
