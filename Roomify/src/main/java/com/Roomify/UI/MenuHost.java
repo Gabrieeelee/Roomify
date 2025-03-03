@@ -4,8 +4,10 @@ import com.Roomify.*;
 import com.Roomify.Exception.LogException;
 
 import javax.sound.midi.Soundbank;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,8 @@ public class MenuHost extends Menu{
         System.out.println("4. Rispondi recensioni");
         System.out.println("5. Assistenza");
         System.out.println("6. Visualizza Recensioni");
-        System.out.println("7. Logout");
+        System.out.println("7. Modifica Struttura");
+        System.out.println("9. Logout");
     }
 
     @Override
@@ -45,6 +48,9 @@ public class MenuHost extends Menu{
                 visualizzaRecensioni();
                 break;
             case 7:
+                modificaStruttura();
+                break;
+            case 9:
                 logout();
                 Menu menu = new LoginMenu();
                 menu.menu();
@@ -53,6 +59,8 @@ public class MenuHost extends Menu{
                 System.out.println("Opzione non valida");
         }
     }
+
+
 
     private void goToMenu(String msg){
         System.out.println(msg);
@@ -96,6 +104,42 @@ public class MenuHost extends Menu{
             System.out.println(e.getMessage());
             return;
         }
+
+        boolean trv = true;
+        while(trv) {
+            System.out.println("Vuoi inserire una tariffa?\n1. Si\n2. No");
+            int id = input.nextInt();
+            switch (id) {
+                case 1:
+                    int meseInizio = 0;
+                    int meseFine = 0;
+                    System.out.println("Inserisci nome: ");
+                    input.nextLine();
+                    nome = input.nextLine();
+                    do {
+                        System.out.println("Inserisci mese di inizio: (1,2,...,12)");
+                        meseInizio = input.nextInt();
+                    }while (meseInizio > 12);
+                    do{
+                        System.out.println("Inserisci mese fine: (1,2,...,12)");
+                        meseFine = input.nextInt();
+                    }while(meseFine > 12 || meseFine < meseInizio);
+
+                    System.out.println("Inserisci fattore moltiplicativo (x,y)");
+                    float fattoreMoltiplicativo = input.nextFloat();
+
+                    sistema.inserisciTariffa(nome, meseInizio, meseFine, fattoreMoltiplicativo);
+                    break;
+                case 2:
+                    trv = false;
+                    break;
+                default:
+                    System.out.println("ID inserito sbagliato");
+                    break;
+            }
+        }
+
+
         boolean inserimento = true;
 
         while (inserimento){
@@ -206,14 +250,51 @@ public class MenuHost extends Menu{
         while(true){
             System.out.println("Inserisci codice servizio\n0 - Chiudi inserimento");
             int sv = input.nextInt();
-            if (sv == 0){
-                sistema.inserisciCasavacanza(nome, descrizione, paese, citta, provincia, cap, indirizzo, nMaxOspiti, nVani, prezzoNotte, dimensione, servizi );
-                confermaCasaVacanze();
-            }else{
+            if (sv != 0){
                 servizi.add(sv);
+            }else{
+                break;
             }
         }
+        sistema.inserisciCasavacanza(nome, descrizione, paese, citta, provincia, cap, indirizzo, nMaxOspiti, nVani, prezzoNotte, dimensione, servizi );
+
+        boolean trv = true;
+        while(trv) {
+            System.out.println("Vuoi inserire una tariffa?\n1. Si\n2. No");
+            int id = input.nextInt();
+            switch (id) {
+                case 1:
+                    int meseInizio = 0;
+                    int meseFine = 0;
+                    System.out.println("Inserisci nome: ");
+                    input.nextLine();
+                    nome = input.nextLine();
+                    do {
+                        System.out.println("Inserisci mese di inizio: (1,2,...,12)");
+                        meseInizio = input.nextInt();
+                    }while (meseInizio > 12);
+                    do{
+                        System.out.println("Inserisci mese fine: (1,2,...,12)");
+                        meseFine = input.nextInt();
+                    }while(meseFine > 12 || meseFine < meseInizio);
+
+                    System.out.println("Inserisci fattore moltiplicativo (x,y)");
+                    float fattoreMoltiplicativo = input.nextFloat();
+
+                    sistema.inserisciTariffa(nome, meseInizio, meseFine, fattoreMoltiplicativo);
+                    break;
+                case 2:
+                    trv = false;
+                    break;
+                default:
+                    System.out.println("ID inserito sbagliato");
+                    break;
+            }
+        }
+
+        confermaCasaVacanze();
     }
+
 
     public void confermaCasaVacanze(){
         try {
@@ -249,7 +330,7 @@ public class MenuHost extends Menu{
         }
         while(true) {
             System.out.println("\nScegli la struttura");
-             sv = scanner.nextInt();
+            sv = scanner.nextInt();
             if(map.containsKey(sv))
                 break;
             System.out.println("Non possiedi questa struttura, inseriscine una di tua proprietà");
@@ -513,5 +594,286 @@ public class MenuHost extends Menu{
             goToMenu("Ecco le recensioni, torno al menu.");
 
         }
+    }
+
+    public void modificaStruttura() {
+        Map<Integer, Struttura> mappaStrutture = sistema.modificaStruttura();
+        Scanner scanner = new Scanner(System.in);
+        for (Struttura str : mappaStrutture.values()){
+            System.out.println(str.toString());
+        }
+        int id = 0;
+        while (true){
+            System.out.println("Scegli struttura");
+            id = scanner.nextInt();
+            if (mappaStrutture.containsKey(id)){
+                break;
+            }
+            System.out.println("Id non corretto");
+        }
+
+        //PERCHé ABBIAMO STCORRENTE E ULTRASTRUCTURE
+        Struttura st =  sistema.selStrut(id);
+        if (st instanceof CasaVacanze){
+            modificaCV();
+        }else{
+            modificaBeb();
+        }
+        goToMenu("Modifiche effettuate!\n"+mappaStrutture.get(id).toString());
+    }
+
+    public void modificaCV(){
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Integer> listaserv = new ArrayList<>();
+        String nome = "";
+        String descrizione = "";
+        boolean trv = true;
+        int id = 0;
+
+        //nome
+        while (trv){
+            System.out.println("Vuoi modificare il nome?\n1. Si\n2. No");
+            id = scanner.nextInt();
+            switch (id){
+                case 1:
+                    System.out.println("Inserisci nome:");
+                    scanner.nextLine();
+                    nome = scanner.nextLine();
+                    trv = false;
+                    break;
+                case 2:
+                    nome = sistema.getStrutturascelta().getNome();
+                    trv = false;
+                    break;
+                default:
+                    goToMenu("Hai inserito una scelta sbagliata");
+                    break;
+            }
+        }
+
+        //descrizione
+        trv = true;
+        while (trv){
+            System.out.println("Vuoi modificare la descrizione?\n1. Si\n2. No");
+            id = scanner.nextInt();
+            switch (id){
+                case 1:
+                    System.out.println("Inserisci descrizione:");
+                    scanner.nextLine();
+                    descrizione = scanner.nextLine();
+                    trv = false;
+                    break;
+                case 2:
+                    descrizione = sistema.getStrutturascelta().getDescrizione();
+                    trv = false;
+                    break;
+                default:
+                    goToMenu("Hai inserito una scelta sbagliata");
+                    break;
+            }
+        }
+
+        //listaserv
+        trv = true;
+        while (trv){
+            System.out.println("Vuoi aggiungere servizi?\n1. Si\n2. No");
+            id = scanner.nextInt();
+            switch (id){
+                case 1:
+                    while (true){
+                        HashMap<Integer, Servizio> servizi = sistema.getServizi();
+                        for (Servizio sv : servizi.values()){
+                            System.out.println(sv.toString());
+                        }
+                        System.out.println("Inserisci 975 per annullare l'inserimento\nInserisci id:");
+                        id = scanner.nextInt();
+                        if(servizi.containsKey(id)){
+                            listaserv.add(id);
+                        }else{
+                            System.out.println("Id di nessun servizio");
+                        }
+
+                        if (id == 975){
+                            break;
+                        }
+                    }
+                    trv = false;
+                    break;
+                case 2:
+                    trv = false;
+                    break;
+                default:
+                    goToMenu("Hai inserito una scelta sbagliata");
+                    break;
+            }
+        }
+
+        sistema.modificaCV(nome, descrizione, listaserv);
+
+    }
+    public void modificaBeb() {
+        Scanner scanner = new Scanner(System.in);
+        String nome = "";
+        String descrizione = "";
+        boolean trv = true;
+        int id = 0;
+
+        while (trv){
+            System.out.println("Vuoi modificare il nome?\n1. Si\n2. No");
+            id = scanner.nextInt();
+            switch (id){
+                case 1:
+                    System.out.println("Inserisci nome:");
+                    scanner.nextLine();
+                    nome = scanner.nextLine();
+                    trv = false;
+                    break;
+                case 2:
+                    nome = sistema.getStrutturascelta().getNome();
+                    trv = false;
+                    break;
+                default:
+                    goToMenu("Hai inserito una scelta sbagliata");
+                    break;
+            }
+        }
+
+        trv = true;
+        while (trv){
+            System.out.println("Vuoi modificare la descrizione?\n1. Si\n2. No");
+            id = scanner.nextInt();
+            switch (id){
+                case 1:
+                    System.out.println("Inserisci nome:");
+                    scanner.nextLine();
+                    descrizione = scanner.nextLine();
+                    trv = false;
+                    break;
+                case 2:
+                    descrizione = sistema.getStrutturascelta().getNome();
+                    trv = false;
+                    break;
+                default:
+                    goToMenu("Hai inserito una scelta sbagliata");
+                    break;
+            }
+        }
+
+        sistema.modificaBeb(nome, descrizione);
+        getStanze();
+        modStanza();
+    }
+
+    public void getStanze(){
+        Map<String, Stanza> mapStanze = sistema.getStanze();
+        Scanner scanner = new Scanner(System.in);
+        String id = "";
+        for (Stanza stn : mapStanze.values()){
+            System.out.println(stn.toStrings());
+        }
+
+        while (true){
+            System.out.println("Inserisci id:");
+            id = scanner.nextLine();
+            if (mapStanze.containsKey(id)){
+                break;
+            }else{
+                System.out.println("ID Sbagliato");
+            }
+        }
+        selStanza(id);
+    }
+
+    private void modStanza() {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Integer> listaserv = new ArrayList<>();
+        String nome = "";
+        String descrizione = "";
+        boolean trv = true;
+        int id = 0;
+
+        //nome
+        while (trv){
+            System.out.println("Vuoi modificare il nome?\n1. Si\n2. No");
+            id = scanner.nextInt();
+            switch (id){
+                case 1:
+                    System.out.println("Inserisci nome:");
+                    scanner.nextLine();
+                    nome = scanner.nextLine();
+                    trv = false;
+                    break;
+                case 2:
+                    nome = sistema.getStrutturascelta().getNome();
+                    trv = false;
+                    break;
+                default:
+                    goToMenu("Hai inserito una scelta sbagliata");
+                    break;
+            }
+        }
+
+        //descrizione
+        trv = true;
+        while (trv){
+            System.out.println("Vuoi modificare la descrizione?\n1. Si\n2. No");
+            id = scanner.nextInt();
+            switch (id){
+                case 1:
+                    System.out.println("Inserisci descrizione:");
+                    scanner.nextLine();
+                    descrizione = scanner.nextLine();
+                    trv = false;
+                    break;
+                case 2:
+                    descrizione = sistema.getStrutturascelta().getDescrizione();
+                    trv = false;
+                    break;
+                default:
+                    goToMenu("Hai inserito una scelta sbagliata");
+                    break;
+            }
+        }
+
+        //listaserv
+        trv = true;
+        while (trv){
+            System.out.println("Vuoi aggiungere servizi?\n1. Si\n2. No");
+            id = scanner.nextInt();
+            switch (id){
+                case 1:
+                    while (true){
+                        HashMap<Integer, Servizio> servizi = sistema.getServizi();
+                        for (Servizio sv : servizi.values()){
+                            System.out.println(sv.toString());
+                        }
+                        System.out.println("Inserisci 975 per annullare l'inserimento\nInserisci id:");
+                        id = scanner.nextInt();
+                        if(servizi.containsKey(id)){
+                            listaserv.add(id);
+                        }else{
+                            System.out.println("Id di nessun servizio");
+                        }
+
+                        if (id == 975){
+                            break;
+                        }
+                    }
+                    trv = false;
+                    break;
+                case 2:
+                    trv = false;
+                    break;
+                default:
+                    goToMenu("Hai inserito una scelta sbagliata");
+                    break;
+            }
+        }
+
+        sistema.modStanza(nome, descrizione, listaserv);
+    }
+
+    public void selStanza(String id){
+        sistema.selStanza(id);
     }
 }

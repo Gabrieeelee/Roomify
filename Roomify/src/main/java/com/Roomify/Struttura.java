@@ -1,8 +1,6 @@
 package com.Roomify;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Map;
 
 public abstract class Struttura {
     private int id;
@@ -139,11 +137,9 @@ public abstract class Struttura {
                 break;
             }
         }
-   //     listRecensioni.get(id).setCommentoHost(commentoHost);
-     //   listRecensioni.get(id).setRecensioneConclusa();
     }
 
-    public void inserisciTariffa(String nome, LocalDate datainizio,LocalDate datafine, float fattoreMoltiplicativo){
+    public void inserisciTariffa(String nome, int datainizio, int datafine, float fattoreMoltiplicativo){
          TariffaStagionale tf=new TariffaStagionale(nome,datainizio,datafine,fattoreMoltiplicativo);
          listatf.add(tf);
     }

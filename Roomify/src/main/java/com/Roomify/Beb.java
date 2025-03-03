@@ -1,5 +1,8 @@
     package com.Roomify;
 
+    import scala.collection.SeqView;
+
+    import java.io.Serial;
     import java.time.LocalDate;
     import java.util.ArrayList;
     import java.util.HashMap;
@@ -9,11 +12,21 @@
     public class Beb extends Struttura{
 
         private Map<String,Stanza> listaStanze;
+        private Stanza stanzaCorrente;
 
+
+
+        public void setStanzaCorrente(Stanza stanzaCorrente) {
+            this.stanzaCorrente = stanzaCorrente;
+        }
 
         public Beb(int id, String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo, Host proprietario) {
             super(id, nome, descrizione, paese, citta, provincia, cap, indirizzo,proprietario);
             this.listaStanze = new HashMap<>();
+        }
+
+        public Stanza getStanzaCorrente() {
+            return stanzaCorrente;
         }
 
         //Inserimento della stanza caso d'uso 1
@@ -39,6 +52,31 @@
             return listStanzeDisp;
         }
 
+        public void aggiornaStruttura(String nome, String descrizione){
+            if(nome!=null)
+            setNome(nome);
+            if(descrizione!=null)
+            setDescrizione(descrizione);
+        }
+
+        public Stanza selStanza(String id){
+            stanzaCorrente = listaStanze.get(id);
+            return stanzaCorrente;
+        }
+
+        public void modStanza(String nome, String descrizione, ArrayList<Servizio> listSer){
+            listaStanze.remove(stanzaCorrente.getNome());
+            stanzaCorrente.setInfo(nome, descrizione, listSer);
+            listaStanze.put(stanzaCorrente.getNome(), stanzaCorrente);
+        }
+
+        public Map<Integer,Prenotazione> getListaPrenStanze(){
+            Map<Integer,Prenotazione> mapPrenotazione = new HashMap<>();
+            for(Stanza stanza : listaStanze.values()){
+                mapPrenotazione.putAll(stanza.getListaprenotazioni());
+            }
+            return mapPrenotazione;
+        }
     }
 
 

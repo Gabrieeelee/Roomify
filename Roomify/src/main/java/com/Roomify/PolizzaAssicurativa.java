@@ -49,6 +49,10 @@ public class PolizzaAssicurativa {
         return false;
     }
 
+    public void setStato(String stato) {
+        this.stato = stato;
+    }
+
     @Override
     public String toString() {
         return "PolizzaAssicurativa{" +

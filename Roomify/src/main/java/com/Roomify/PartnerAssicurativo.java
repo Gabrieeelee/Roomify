@@ -9,7 +9,8 @@ import java.util.Random;
 public class PartnerAssicurativo extends Utente {
     private int nlicenza;
     private Map<Integer, PolizzaAssicurativa> listapolizze;
-private ArrayList<PolizzaAssicurativa> lPAssCorrente;
+    private ArrayList<PolizzaAssicurativa> lPAssCorrente;
+    private PolizzaAssicurativa polizzaCorrente;
 
     public PartnerAssicurativo(int id, String nome, String cognome, LocalDate dataDiNascita, String codicefiscale, String email, String telefono, int nlicenza) {
         super(id, nome, cognome, dataDiNascita, codicefiscale, email, telefono);
@@ -39,6 +40,7 @@ private ArrayList<PolizzaAssicurativa> lPAssCorrente;
             }
         }
     }
+
     public void confermaInserimento(){
         for(int i = 0; i < lPAssCorrente.size(); i++){
             PolizzaAssicurativa pa = lPAssCorrente.get(i);
@@ -68,4 +70,20 @@ private ArrayList<PolizzaAssicurativa> lPAssCorrente;
     public PolizzaAssicurativa getPolizza(int id){
         return listapolizze.get(id);
     }
+
+    public PolizzaAssicurativa selectPolizza(int id){
+        polizzaCorrente=listapolizze.get(id);
+        return polizzaCorrente;
+    }
+
+    public boolean  delPolizza(){
+        listapolizze.remove(polizzaCorrente.getId());
+        return true;
+    }
+
+    public boolean  disPolizza(){
+        polizzaCorrente.setStato("Disattivato");
+        return true;
+    }
+
 }

@@ -78,19 +78,17 @@ public class Stanza  {
         listaprenotazioni.put(pre.getId(),pre);
     }
 
-    public Stanza isAvailable(LocalDate dataInizio, LocalDate dataFine, int nOspiti){
+   /* public Stanza isAvailable(LocalDate dataInizio, LocalDate dataFine, int nOspiti){
         int flag=0;
         if (this.nospiti >= nOspiti){
             if(!listaprenotazioni.isEmpty()) {
                 for (Prenotazione pren : listaprenotazioni.values()) {
                     if (pren.getStanza().getId() == this.getId()) {
-                        if (dataFine.isBefore(pren.getDatainizio()) || dataInizio.isAfter(pren.getDatafine()) || !(dataInizio.isEqual(pren.getDatainizio())))
-                        {
-                            return this;
-                        }
-                        else {
-                           return null;
-                        }
+                            if (!((dataInizio.isAfter(pren.getDatainizio()) && dataInizio.isBefore(pren.getDatafine())) || (dataInizio.isEqual(pren.getDatainizio()))) && !((dataFine.isAfter(pren.getDatainizio()) && dataFine.isBefore(pren.getDatafine())) ||dataFine.isEqual(pren.getDatafine()))) {
+                                return this;
+                            } else {
+                                return null;
+                            }
                     }
                 }
             }else{
@@ -98,6 +96,40 @@ public class Stanza  {
             }
         }
         return null;
+    }*/
+
+    public Stanza isAvailable(LocalDate dataInizio, LocalDate dataFine, int nOspiti){
+        if (this.nospiti < nOspiti) {
+            return null;
+        }
+
+        if (listaprenotazioni.isEmpty()) {
+            return this;
+        }
+        for (Prenotazione pren : listaprenotazioni.values()) {
+            LocalDate prenInizio = pren.getDatainizio();
+            LocalDate prenFine = pren.getDatafine();
+
+            if (!(dataFine.isBefore(prenInizio) || dataInizio.isAfter(prenFine))) {
+                if(pren.getStato().equals("Prenotazione annullata"))
+                    return this;
+                return null;
+            }
+        }
+
+        return this;
+    }
+
+
+    public void setInfo(String nome, String descrizione, ArrayList<Servizio>listaserv) {
+        if (nome != null)
+            this.nome = nome;
+        if (descrizione != null)
+            this.descrizione = descrizione;
+        if (listaserv != null) {
+            if (!listaserv.isEmpty())
+                this.listaservizi.addAll(listaserv);
+        }
     }
 
     public String toStrings() {

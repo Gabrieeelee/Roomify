@@ -53,6 +53,21 @@ public class CasaVacanze extends Struttura {
         return listaprenotazioni;
     }
 
+    public boolean isAvailable(LocalDate dataInizio, LocalDate dataFine, int nOspiti){
+        if (this.getnMaxOspiti() >= nOspiti) {
+            if(!listaprenotazioni.isEmpty()){
+                for (Prenotazione pren : listaprenotazioni.values()) {
+                    if (((dataInizio.isAfter(pren.getDatainizio()) || dataInizio.isEqual(pren.getDatainizio())) && (dataInizio.isBefore(pren.getDatafine())))|| dataFine.isEqual(pren.getDatafine())) {
+                        return false;
+                    }
+                }
+            }else  return true;
+        }else {
+            return false;
+        }
+        return true;
+    }
+
     public int generaNumeroPrenotazione(){
         Random random=new Random();
         while(true){
@@ -62,4 +77,22 @@ public class CasaVacanze extends Struttura {
             }
         }
     }
+
+    public void aggiornaStruttura(String nome, String descrizione, ArrayList<Servizio> listserv){
+        if(nome!=null)
+        setNome(nome);
+
+        if(descrizione!=null)
+        setDescrizione(descrizione);
+
+        if(listserv!=null){
+            if (!listserv.isEmpty()){
+                listaServizi.addAll(listserv);
+            }
+        }
+    }
+
+
+
+
 }

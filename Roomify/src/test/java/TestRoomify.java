@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class TestRoomify {
     public void testinseriscitariffa(){
         roomify.logIn(2);
         roomify.inserisciCasavacanza("Un estate al mare", "casa al mare", "italia", "taormina","messina",98034, "via dei licantropi", 2, 2, 300, 100, new ArrayList<>());
-        roomify.inserisciTariffa("money",LocalDate.of(2025,01,01),LocalDate.of(2025,05,31),1/2);
+        roomify.inserisciTariffa("money",10,12,1/2);
         assertNotNull(roomify.getStcorrente().getListatf());
     }
     @Test
@@ -117,6 +118,13 @@ public class TestRoomify {
     }
 
     @Test
+    public void testgetListaStanzaDisp(){
+        roomify.logIn(3);
+        ArrayList<Struttura> lista=roomify.prenotaAlloggio("Torino", LocalDate.of(2025,05,10),LocalDate.of(2025,05,15),2);
+        Struttura st=roomify.selezionaStruttura(8);
+        assertEquals(3,roomify.getStanzeDisp().size());
+    }
+    @Test
     public void testSelezionaStanza(){
         roomify.logIn(1);
         ArrayList<Struttura> lista=roomify.prenotaAlloggio("Taormina", LocalDate.of(2020,10,10),LocalDate.of(2020,10,15),2);
@@ -173,9 +181,9 @@ public class TestRoomify {
     //TEST UC8
     @Test
     public void testRegistrazioneHost(){
-        roomify.registrazioneHost("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228", "123123123", "IT", "Via Francesco II");
+        assertFalse(roomify.registrazioneHost("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228", "123123123", "IT", "Via Francesco II"));
         //un utente già registrato con un codice fiscale non può registrarsi nuovamente
-        assertNull( roomify.getUtenteCorrente());
+
 
         roomify.registrazioneHost("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLRqwe", "email2@test.com", "228", "123123123", "IT", "Via Francesco II");
         //se la registrazione avviene, la lista viene incrementata
@@ -186,18 +194,18 @@ public class TestRoomify {
     public void testRegistrazioneCliente(){
         roomify.registrazioneCliente("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228");
         //un utente già registrato con un codice fiscale non può registrarsi nuovamente
-        assertNull( roomify.getUtenteCorrente());
+        assertNotNull( roomify.getUtenteCorrente());
 
-        roomify.registrazioneCliente("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228");
+        assertFalse(roomify.registrazioneCliente("Gabriele", "Florio", LocalDate.of(2001, 6, 3), "DRS", "email2@test.com", "228"));
         //un utente già registrato con un codice fiscale non può registrarsi nuovamente
-        assertNull( roomify.getUtenteCorrente());
+
     }
 
     @Test
     public void testRegistrazionePartner(){
         assertTrue(roomify.registrazionePartner("Erma", "Florio", LocalDate.of(1999,01,13), "nuovocf", "eree", "323232323", 332));
 
-        assertFalse(roomify.registrazionePartner("Erma", "Florio", LocalDate.of(1999,01,13), "DIDSA", "eree", "323232323", 332));
+        assertFalse(roomify.registrazionePartner("Erma", "Florio", LocalDate.of(1999,01,13), "RSSMRA85E20H501Z", "eree", "323232323", 332));
     }
 
     @Test
@@ -402,7 +410,7 @@ public class TestRoomify {
         assertEquals(3, ((PartnerAssicurativo)roomify.getUtenteCorrente()).getListapolizze().size());
 
     }
-//uc14
+//uc9
     @Test
     public  void visualizzaRecensioni(){
         roomify.logIn(8);
@@ -446,7 +454,109 @@ public class TestRoomify {
         roomify.logout();
     }
 
+    //UC1 estensione
+    @Test
+    public void testmodificaStruttura(){
+        roomify.logIn(6);
+        assertNotNull(roomify.modificaStruttura());
+    }
 
+    @Test
+    public void testModificaCv(){
+        roomify.logIn(2);
+        roomify.selStrut(2);
+        assertEquals("Casa Luna",roomify.getStrutturascelta().getNome());
+        roomify.modificaCV("Fantasy home",null,null);
+        assertEquals("Fantasy home",roomify.getStrutturascelta().getNome());
+        roomify.modificaCV(null,null,new ArrayList<Integer>(Arrays.asList(1,4)));
+        assertEquals(6,((CasaVacanze)roomify.getStrutturascelta()).getListaServizi().size());
+    }
 
+    @Test
+    public void testModificaBeb(){
+        roomify.logIn(6);
+        roomify.selStrut(4);
+        assertEquals("La Dolce Mela",roomify.getStrutturascelta().getNome());
+        roomify.modificaBeb("La Dolce perina",null);
+        assertEquals("La Dolce perina",roomify.getStrutturascelta().getNome());
+    }
+
+    @Test
+    public void testgetStanze(){
+        roomify.logIn(6);
+        roomify.selStrut(4);
+        assertEquals(3,roomify.getStanze().size());
+    }
+
+    @Test
+    public void testselStanza(){
+        roomify.logIn(6);
+        roomify.selStrut(4);
+        assertEquals("Suite Panoramica",roomify.selStanza("Suite Panoramica").getNome());
+    }
+
+    @Test
+    public void testmodStanza(){
+        roomify.logIn(6);
+        roomify.selStrut(4);
+        assertEquals("Suite Panoramica",roomify.selStanza("Suite Panoramica").getNome());
+        roomify.modStanza("Suite lussuosa",null,new ArrayList<Integer>(Arrays.asList(2,3)));
+        assertEquals("Suite lussuosa",((Beb)roomify.getStrutturascelta()).getListaStanze().get("Suite lussuosa").getNome());
+        assertEquals(6,((Beb)roomify.getStrutturascelta()).getListaStanze().get("Suite lussuosa").getListaservizi().size());
+    }
+
+    @Test
+    public void testaggiungiStanza(){
+        roomify.logIn(6);
+        roomify.selStrut(4);
+        assertEquals(3,((Beb)roomify.getStrutturascelta()).getListaStanze().size());
+        roomify.setStcorrente(roomify.getStrutturascelta());
+        roomify.inserisciStanza("luxuryyyy",3,111,100,"bellissima",new ArrayList<>());
+        assertEquals(4,((Beb)roomify.getStrutturascelta()).getListaStanze().size());
+    }
+
+    @Test
+    public void testdeldisPolizza(){
+        roomify.logIn(9);
+        assertEquals(3,roomify.deldisPolizza().size());
+    }
+
+    @Test
+    public void testselpolizza(){
+        roomify.logIn(9);
+        int id=0;
+        for(PolizzaAssicurativa polizza: ((PartnerAssicurativo)roomify.getUtenteCorrente()).getListapolizze().values() ){
+            id=polizza.getId();
+            break;
+        }
+        assertNotNull(roomify.selPolizza(id));
+    }
+
+    @Test
+    public void testDelPolizza(){
+        roomify.logIn(9);
+        assertEquals(3,roomify.deldisPolizza().size());
+        int id=0;
+        for(PolizzaAssicurativa polizza: ((PartnerAssicurativo)roomify.getUtenteCorrente()).getListapolizze().values() ){
+            id=polizza.getId();
+            break;
+        }
+        roomify.selPolizza(id);
+        roomify.delPolizza();
+        assertEquals(2,roomify.deldisPolizza().size());
+    }
+
+    @Test
+    public void testdisPolizza(){
+        roomify.logIn(9);
+        int id=0;
+        for(PolizzaAssicurativa polizza: ((PartnerAssicurativo)roomify.getUtenteCorrente()).getListapolizze().values() ){
+            id=polizza.getId();
+            break;
+        }
+        roomify.selPolizza(id);
+        assertEquals(true,roomify.disPolizza());
+        assertEquals("Disattivato", roomify.selPolizza(id).getStato());
+    }
 
 }

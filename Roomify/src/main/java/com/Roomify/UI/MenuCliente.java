@@ -92,7 +92,7 @@ public class MenuCliente extends Menu {
             System.out.println("Inserisci numeri di ospiti: ");
             int nOspiti = input.nextInt();
 
-             str = sistema.prenotaAlloggio(citta, dataInizio, dataFine, nOspiti);
+            str = sistema.prenotaAlloggio(citta, dataInizio, dataFine, nOspiti);
 
             if(str.isEmpty()){
                 a=false;
@@ -125,10 +125,9 @@ public class MenuCliente extends Menu {
         Scanner input = new Scanner(System.in);
         Struttura st = sistema.selezionaStruttura(id);
         if(st instanceof Beb){
-            Map<String, Stanza> map = ((Beb) st).getListaStanze();
-            for (Stanza stn : map.values()){
-                System.out.println("\n");
-                System.out.println(stn.toStrings());
+            ArrayList<Stanza> listastanze=getStanzeDisp();
+            for(int i=0;i<listastanze.size();i++){
+                System.out.println(listastanze.get(i).toStrings());
             }
 
             int sv = 0;
@@ -136,9 +135,9 @@ public class MenuCliente extends Menu {
             while(sv < 3){
                 System.out.println("Inserisci id");
                 id = input.nextInt();
-                for(Stanza stn : map.values()){
-                    if (stn.getId() == id){
-                        selezionaStruttura(id);
+                for(int i=0;i<listastanze.size();i++){
+                    if (listastanze.get(i).getId() == id){
+                        selezionaStanza(id);
                         bool = true;
                         break;
                     }
@@ -150,17 +149,22 @@ public class MenuCliente extends Menu {
                     break;
                 }
             }
-            goToMenu("Ma sei demente? Ritorno nel menu...");
+            goToMenu(" Ritorno nel menu...");
         }else{
+            System.out.println(((CasaVacanze)sistema.getStrutturascelta()).toString());
             confermaPrenotazione();
         }
+    }
 
-
+    public ArrayList<Stanza> getStanzeDisp(){
+        return sistema.getStanzeDisp();
     }
 
     public void selezionaStanza(int id) throws Exception {
         sistema.selezionaStanza(id);
+        System.out.println(((Beb)sistema.getStrutturascelta()).getStanzaCorrente().toStrings());
         confermaPrenotazione();
+
     }
 
     public void confermaPrenotazione() throws Exception {

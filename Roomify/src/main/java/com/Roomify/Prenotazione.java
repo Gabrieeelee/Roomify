@@ -1,6 +1,7 @@
 package com.Roomify;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 
 public class Prenotazione {
@@ -12,6 +13,7 @@ public class Prenotazione {
     private String stato;
     private int nOspiti;
     private PolizzaAssicurativa polizza;
+    float costoTotale;
 
     Stanza st;
 
@@ -113,6 +115,21 @@ public class Prenotazione {
         return nOspiti;
     }
 
+    public void setCostoTotale() {
+       long p = ChronoUnit.DAYS.between(datainizio, datafine);
+       float fattoreMoltiplicativo=1;
+       for(int i=0;i<struttu.getListatf().size();i++){
+           if(datainizio.getMonthValue()>struttu.getListatf().get(i).getmeseinizio() && datafine.getMonthValue()<struttu.getListatf().get(i).getmesefine()){
+             fattoreMoltiplicativo = struttu.getListatf().get(i).getFattoreMoltiplicativo();
+           }
+       }
+       if(struttu instanceof Beb){
+           costoTotale=st.getPrezzopernotte()*p*fattoreMoltiplicativo;
+       }else{
+           costoTotale=((CasaVacanze)struttu).getPrezzoNotte()*p*fattoreMoltiplicativo;
+       }
+    }
+
     @Override
     public String toString() {
         return "Prenotazione{" +
@@ -123,6 +140,7 @@ public class Prenotazione {
                 ", st=" + st +
                 ", cl=" + cl +
                 ", struttu=" + struttu +
+                ", costo totale=" + costoTotale +
                 '}';
     }
 
