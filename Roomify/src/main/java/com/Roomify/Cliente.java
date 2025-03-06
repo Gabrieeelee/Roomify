@@ -1,48 +1,19 @@
 package com.Roomify;
 
-import com.Roomify.Assistenza.CategoriaAssistenza;
-import com.Roomify.Assistenza.RichiestaAssistenza;
-import com.Roomify.Assistenza.RichiestaAssistenzaFactory;
-import com.Roomify.Assistenza.RichiestaAssistenzaPrenotazione;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class Cliente extends Utente  {
 
     private Map<Integer,Prenotazione> listaPrenotazioniClienti;
     private ArrayList<Recensione> listaRecensioni;
-    private ArrayList<RichiestaAssistenza> listaAssistenza;
 
     public Cliente(int id,String nome, String cognome, LocalDate dataDiNascita, String codicefiscale, String email, String telefono) {
         super(id,nome, cognome, dataDiNascita, codicefiscale, email, telefono);
         listaPrenotazioniClienti= new HashMap<>();
         listaRecensioni = new ArrayList<>();
-    }
-
-    public Map<Integer,Struttura> nuovaRecensione(){
-        Map<Integer,Struttura> listStruRecensibili= new HashMap<>();
-        for (Prenotazione pre: listaPrenotazioniClienti.values()){
-            boolean flag = false;
-            if(pre.isRecensibile()!=null){
-                for(int i = 0; i < listaRecensioni.size(); i++){
-                    //AGGIUNTO GETST a recensione
-                    if (listaRecensioni.get(i).getSt().getId() == pre.getStruttu().getId()){
-                        flag = true;
-                        break;
-                    }
-                }
-                if (!flag){
-                    listStruRecensibili.put(pre.isRecensibile().getId(),pre.isRecensibile());
-                }
-            }
-
-
-        }
-        return listStruRecensibili;
     }
 
     public void addPrenotazione(Prenotazione pre){
@@ -60,13 +31,48 @@ public class Cliente extends Utente  {
         return listaPrenotazioniPeriodo;
     }
 
-    public Map<Integer, Prenotazione> getListaPrenotazioniClienti(){
-        return listaPrenotazioniClienti;
+    public Map<Integer, Prenotazione> getListaPrenotazioniClientiAnnullabili(){
+        Map<Integer, Prenotazione> map = new HashMap<>();
+        for (Prenotazione pre : listaPrenotazioniClienti.values()){
+            if(pre.isAnnullabile()){
+                map.put(pre.getId(), pre);
+            }
+        }
+        return map;
     }
 
+    public Prenotazione getPrenotazione(int id){
+        if (listaPrenotazioniClienti.get(id)!=null){
+            return listaPrenotazioniClienti.get(id);
+        }
+        return null;
+    }
 
-    public Recensione inserisciRecensione(int valutazione, String commento,Cliente cliente, Struttura st){
-        Recensione re = new Recensione(listaRecensioni.size()+1,valutazione, commento, cliente,st );
+    public Map<Integer,Struttura> nuovaRecensione(){
+        Map<Integer,Struttura> listStruRecensibili= new HashMap<>();
+        for (Prenotazione pre: listaPrenotazioniClienti.values()){
+            boolean flag = false;
+            if(pre.isRecensibile()!=null){
+                if(listaRecensioni!=null)
+                    for(int i = 0; i < listaRecensioni.size(); i++){
+                        //AGGIUNTO GETST a recensione
+                        if (listaRecensioni.get(i).getSt().getId() == pre.getStruttu().getId()){
+                            flag = true;
+                            break;
+                        }
+                    }
+                if (!flag){
+                    listStruRecensibili.put(pre.isRecensibile().getId(),pre.isRecensibile());
+                }
+            }
+
+
+        }
+        return listStruRecensibili;
+    }
+
+    public Recensione inserisciRecensione(int id,int valutazione, String commento,Cliente cliente, Struttura st){
+        Recensione re = new Recensione(id,valutazione, commento, cliente,st );
         re.setStato("Non convalidata");
         listaRecensioni.add(re);
         return  re;
@@ -76,32 +82,7 @@ public class Cliente extends Utente  {
         return listaRecensioni;
     }
 
-    public RichiestaAssistenza richiestaAssistenzaPrenotazione(int idAss,String descrizione, int id,String stato){
-        Map<Integer,Prenotazione> listapren=getListaPrenotazioniClienti();
-        Prenotazione prenotazione=listapren.get(id);
 
-        RichiestaAssistenzaFactory factoryPrenotazione = RichiestaAssistenzaFactory.creaFactory(CategoriaAssistenza.PRENOTAZIONE);
-        RichiestaAssistenza richiesta1 = factoryPrenotazione.creaRichiesta(idAss,descrizione,stato, this, prenotazione, null);
-        setRichiestaAssistenzacorr(richiesta1);
-        return richiesta1;
-    }
-
-    public RichiestaAssistenza richiestaAssistenzaRecensione(int idAss,String descrizione, int id,String stato){
-        ArrayList<Recensione> listarec=getListaRecensioni();
-        Recensione rec=null;
-        for(int i = 0; i < listarec.size(); i++){
-            if(listarec.get(i).getId() == id){
-                rec = listarec.get(i);
-                break;
-            }
-        }
-
-        RichiestaAssistenzaFactory factoryRecensione = RichiestaAssistenzaFactory.creaFactory(CategoriaAssistenza.RECENSIONE);
-        RichiestaAssistenza richiesta1 = factoryRecensione.creaRichiesta(idAss,descrizione,stato, this, null, rec);
-        //addListaAssistenza(richiesta1);
-        setRichiestaAssistenzacorr(richiesta1);
-        return richiesta1;
-    }
 
     //UC10
     public ArrayList<Prenotazione> getPrenotazioniAss(){
@@ -117,6 +98,45 @@ public class Cliente extends Utente  {
 
     public Prenotazione selezionaPrenotazione(int id){
         return listaPrenotazioniClienti.get(id);
+    }
+
+    public Recensione selRecensione(int idRec) {
+        Recensione re = null;
+        for(int i = 0; i < listaRecensioni.size(); i++){
+            if (listaRecensioni.get(i).getId() == idRec){
+                re = listaRecensioni.get(i);
+            }
+        }
+        return re;
+    }
+
+    public Map<Integer,Prenotazione> getListaPrenotazioni(){
+        return listaPrenotazioniClienti;
+    }
+
+    public Prenotazione getListaPrenotazioniClienti(int idPren){
+        return listaPrenotazioniClienti.get(idPren);
+    }
+
+    public ArrayList<Recensione> getRecensioniCommentati(){
+        ArrayList<Recensione> list = new ArrayList<>();
+        for (int i = 0; i < listaRecensioni.size(); i++){
+            if(listaRecensioni.get(i).isCommentato()){
+                list.add(listaRecensioni.get(i));
+            }
+        }
+
+        return list;
+    }
+
+    public String visualizzaRispostaHost(int id){
+        for (int i = 0; i <listaRecensioni.size(); i++){
+            if(listaRecensioni.get(i).getId() == id){
+                return listaRecensioni.get(i).getCommentoHost();
+            }
+        }
+
+        return null;
     }
 
 

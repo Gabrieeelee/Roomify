@@ -1,6 +1,5 @@
 package com.Roomify.UI;
 
-import com.Roomify.Exception.LogException;
 import com.Roomify.Roomify;
 
 import java.util.Scanner;
@@ -13,7 +12,7 @@ public abstract class Menu {
         sistema = Roomify.getInstance();
     }
 
-    public void menu() throws Exception {
+    public void menu() {
         displayMenu();
         int scelta = getOperazioneUtente();
         processaScelta(scelta);
@@ -34,9 +33,9 @@ public abstract class Menu {
 
     }
 
-    abstract void processaScelta(int scelta) throws Exception;
+    abstract void processaScelta(int scelta);
 
-    protected void logout() throws Exception {
+    protected void logout()  {
         sistema.logout();
     }
 }

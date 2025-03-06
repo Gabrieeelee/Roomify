@@ -13,8 +13,10 @@ public class RichiestaAssistenzaPrenotazione extends RichiestaAssistenza{
 
     @Override
     public void mostraDettagli() {
-        System.out.println("Richiesta Assistenza per Prenotazione");
-        System.out.println("Descrizione: " + descrizione);
-        System.out.println("Prenotazione ID: " + prenotazione.getId());
+        System.out.print("\nRichiesta Assistenza per Prenotazione");
+        System.out.print("\n|ID" + id);
+        System.out.print("\n|Descrizione: " + descrizione);
+        System.out.print("\n|Stato: "+ stato);
+        System.out.print("\n|Prenotazione ID: " + prenotazione.getId()+"\n");
     }
 }

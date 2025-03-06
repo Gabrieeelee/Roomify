@@ -7,7 +7,7 @@ public class Recensione {
     private Cliente cl;
     private Struttura st;
     private String stato;
-    private String commentoHost;
+    private String commentoHost = null;
 
 
     public Recensione(int id,int valutazione, String commento, Cliente cl, Struttura st) {
@@ -51,14 +51,21 @@ public class Recensione {
 
     @Override
     public String toString() {
-        return "Recensione{" +
-                "id=" + id +
-                ", valutazione=" + valutazione +
-                ", commento='" + commento + '\'' +
-                ", cl=" + cl +
-                ", st=" + st +
-                ", stato='" + stato + '\'' +
-                ", commentoHost='" + commentoHost + '\'' +
-                '}';
+        return "Recensione:" +
+                "\n|ID=" + id +
+                "\n|Valutazione=" + valutazione +
+                "\n|Commento='" + commento + '\'' +
+                "\n|Cliente=" + cl.getCodicefiscale() +
+                "\n|Struttura=" + st.getNome() +
+                "\n|Stato='" + stato + '\'' +
+                "\n|Commento Host='" + commentoHost ;
+    }
+
+    public boolean isCommentato() {
+        if (commentoHost != null){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

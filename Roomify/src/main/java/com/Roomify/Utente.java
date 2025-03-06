@@ -1,6 +1,7 @@
 package com.Roomify;
 import com.Roomify.Assistenza.CategoriaAssistenza;
 import com.Roomify.Assistenza.RichiestaAssistenza;
+import com.Roomify.Assistenza.RichiestaAssistenzaCreator;
 import com.Roomify.Assistenza.RichiestaAssistenzaFactory;
 
 import java.time.LocalDate;
@@ -37,37 +38,33 @@ public class Utente {
         return listaAssistenza;
     }
 
-    public RichiestaAssistenza richiestaAssistenza(int idAss, String descrizione, String stato){
-
-        RichiestaAssistenzaFactory factoryPrenotazione = RichiestaAssistenzaFactory.creaFactory(CategoriaAssistenza.ALTRI_MOTIVI);
-        RichiestaAssistenza richiesta1 = factoryPrenotazione.creaRichiesta(idAss,descrizione, stato,this, null, null);
-        listaAssistenza.put(richiesta1.getId(),richiesta1);
-        richiestaAssistenzacorr=richiesta1;
-        return richiesta1;
-    }
-
     public String getNome() {
         return nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public LocalDate getDataDiNascita() {
-        return dataDiNascita;
     }
 
     public String getCodicefiscale() {
         return codicefiscale;
     }
 
-    public String getEmail() {
-        return email;
+    public RichiestaAssistenza richiestaAssistenza(int idAss, String descrizione, String stato){
+        RichiestaAssistenzaCreator creator = new RichiestaAssistenzaFactory();
+        RichiestaAssistenza richiesta1 = creator.creaRichiesta(CategoriaAssistenza.ALTRI_MOTIVI,idAss,descrizione, stato,this, null, null);
+        richiestaAssistenzacorr=richiesta1;
+        return richiesta1;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public RichiestaAssistenza richiestaAssistenzaPrenotazione(int idAss,String descrizione,Prenotazione prenotazione,String stato){
+        RichiestaAssistenzaCreator creator = new RichiestaAssistenzaFactory();
+        RichiestaAssistenza richiesta1 = creator.creaRichiesta(CategoriaAssistenza.PRENOTAZIONE,idAss,descrizione,stato,this,prenotazione,null );
+        setRichiestaAssistenzacorr(richiesta1);
+        return richiesta1;
+    }
+
+    public RichiestaAssistenza richiestaAssistenzaRecensione(int idAss,String descrizione, Recensione recensione,String stato){
+        RichiestaAssistenzaCreator creator = new RichiestaAssistenzaFactory();
+        RichiestaAssistenza richiesta1 = creator.creaRichiesta(CategoriaAssistenza.RECENSIONE,idAss,descrizione,stato, this, null, recensione);
+        setRichiestaAssistenzacorr(richiesta1);
+        return richiesta1;
     }
 
 
@@ -78,5 +75,17 @@ public class Utente {
 
     public void setRichiestaAssistenzacorr(RichiestaAssistenza richiestaAssistenzacorr) {
         this.richiestaAssistenzacorr = richiestaAssistenzacorr;
+    }
+
+    @Override
+    public String toString() {
+        return "Utente:" +
+                "\n|ID=" + id +
+                "\n|Nome='" + nome + '\'' +
+                "\n|Cognome='" + cognome + '\'' +
+                "\n|Data Di Nascita=" + dataDiNascita +
+                "\n|Codice fiscale='" + codicefiscale + '\'' +
+                "\n|Email='" + email + '\'' +
+                "\n|Telefono='" + telefono + '\'' ;
     }
 }

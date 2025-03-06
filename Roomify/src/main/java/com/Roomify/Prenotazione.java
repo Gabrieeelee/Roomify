@@ -46,6 +46,10 @@ public class Prenotazione {
         return id;
     }
 
+    public LocalDate getDataPrenotazione() {
+        return dataPrenotazione;
+    }
+
     public LocalDate getDatainizio() {
         return datainizio;
     }
@@ -58,25 +62,19 @@ public class Prenotazione {
         return stato;
     }
 
-    public Prenotazione(int id, LocalDate datainizio, LocalDate datafine, String stato, Stanza st, Cliente cl) {
+    public Prenotazione(int id, LocalDate datainizio, LocalDate datafine, String stato,int nOspiti,Struttura struttu, Stanza st, Cliente cl) {
         this.id = id;
         this.datainizio = datainizio;
         this.datafine = datafine;
         this.stato = stato;
+        this.nOspiti = nOspiti;
+        this.struttu = struttu;
         this.st = st;
         this.cl = cl;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setDatainizio(LocalDate datainizio) {
-        this.datainizio = datainizio;
-    }
-
-    public void setDatafine(LocalDate datafine) {
-        this.datafine = datafine;
     }
 
     public void setStato(String stato) {
@@ -99,20 +97,16 @@ public class Prenotazione {
         return st;
     }
 
-    public Stanza getSt() {
-        return st;
-    }
-
-    public Cliente getCl() {
-        return cl;
-    }
-
     public Struttura getStruttu() {
         return struttu;
     }
 
     public int getnOspiti() {
         return nOspiti;
+    }
+
+    public float getCostoTotale() {
+        return costoTotale;
     }
 
     public void setCostoTotale() {
@@ -132,16 +126,16 @@ public class Prenotazione {
 
     @Override
     public String toString() {
-        return "Prenotazione{" +
-                "id=" + id +
-                ", datainizio=" + datainizio +
-                ", datafine=" + datafine +
-                ", stato='" + stato + '\'' +
-                ", st=" + st +
-                ", cl=" + cl +
-                ", struttu=" + struttu +
-                ", costo totale=" + costoTotale +
-                '}';
+        return "Prenotazione: " +
+                "\n|ID=" + id +
+                "\n|Datainizio=" + datainizio +
+                "\n|Datafine=" + datafine +
+                "\n|Stato='" + stato + '\'' +
+                "\n|Struttura=" + struttu.getNome() +
+                (st != null ? "\n|Stanza=" + st.getNome() : "") +
+                "\n|Cliente=" + cl.getCodicefiscale() +
+                "\n|Costo Totale=" + costoTotale+
+                "\n|Polizza:" + polizza;
     }
 
 
@@ -154,7 +148,7 @@ public class Prenotazione {
     }
 
     public boolean isAssicurabile(){
-        if (LocalDate.now().isBefore(datainizio) && ChronoUnit.DAYS.between(LocalDate.now(), dataPrenotazione) <= 3){
+        if (LocalDate.now().isBefore(datainizio) && (ChronoUnit.DAYS.between(LocalDate.now(), dataPrenotazione) <= 3)&& ChronoUnit.DAYS.between(LocalDate.now(), dataPrenotazione) >= 0){
             return true;
         }
 
@@ -175,5 +169,12 @@ public class Prenotazione {
 
     public void setDataPrenotazione(LocalDate dataPrenotazione) {
         this.dataPrenotazione = dataPrenotazione;
+    }
+
+    public boolean isAnnullabile() {
+        if (!stato.equals("Prenotazione annullata") && LocalDate.now().isBefore(datainizio)){
+            return true;
+        }
+        return false;
     }
 }

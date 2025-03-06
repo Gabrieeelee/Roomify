@@ -78,26 +78,6 @@ public class Stanza  {
         listaprenotazioni.put(pre.getId(),pre);
     }
 
-   /* public Stanza isAvailable(LocalDate dataInizio, LocalDate dataFine, int nOspiti){
-        int flag=0;
-        if (this.nospiti >= nOspiti){
-            if(!listaprenotazioni.isEmpty()) {
-                for (Prenotazione pren : listaprenotazioni.values()) {
-                    if (pren.getStanza().getId() == this.getId()) {
-                            if (!((dataInizio.isAfter(pren.getDatainizio()) && dataInizio.isBefore(pren.getDatafine())) || (dataInizio.isEqual(pren.getDatainizio()))) && !((dataFine.isAfter(pren.getDatainizio()) && dataFine.isBefore(pren.getDatafine())) ||dataFine.isEqual(pren.getDatafine()))) {
-                                return this;
-                            } else {
-                                return null;
-                            }
-                    }
-                }
-            }else{
-                return this;
-            }
-        }
-        return null;
-    }*/
-
     public Stanza isAvailable(LocalDate dataInizio, LocalDate dataFine, int nOspiti){
         if (this.nospiti < nOspiti) {
             return null;
@@ -120,8 +100,7 @@ public class Stanza  {
         return this;
     }
 
-
-    public void setInfo(String nome, String descrizione, ArrayList<Servizio>listaserv) {
+    public void setInfo(String nome, String descrizione, ArrayList<Servizio>listaserv, float prezzopernotte) {
         if (nome != null)
             this.nome = nome;
         if (descrizione != null)
@@ -130,19 +109,19 @@ public class Stanza  {
             if (!listaserv.isEmpty())
                 this.listaservizi.addAll(listaserv);
         }
+        if(prezzopernotte != 0){
+            this.prezzopernotte = prezzopernotte;
+        }
     }
 
     public String toStrings() {
-        return "Stanza{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", nospiti=" + nospiti +
-                ", prezzopernotte=" + prezzopernotte +
-                ", dimensione=" + dimensione +
-                ", descrizione='" + descrizione + '\'' +
-                ", listaservizi=" + listaservizi +
-                ", listaprenotazioni=" + listaprenotazioni +
-                ", beb=" + beb +
-                '}';
+        return "Stanza:" +
+                "\n|ID=" + id +
+                "\n|Nome='" + nome + '\'' +
+                "\n|Numero ospiti=" + nospiti +
+                "\n|Prezzopernotte=" + prezzopernotte +
+                "\n|Dimensione=" + dimensione +
+                "\n|Descrizione='" + descrizione + '\'' +
+                "\n|B&B=" + beb.getNome();
     }
 }

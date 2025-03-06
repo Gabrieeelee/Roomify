@@ -9,7 +9,6 @@ public class CasaVacanze extends Struttura {
     private int nVani;
     private float prezzoNotte;
     private int dimensione;
-    private TariffaStagionale tf;
     private ArrayList<Servizio> listaServizi;
     private Map<Integer,Prenotazione> listaprenotazioni;
 
@@ -29,20 +28,8 @@ public class CasaVacanze extends Struttura {
         return nMaxOspiti;
     }
 
-    public int getnVani() {
-        return nVani;
-    }
-
     public float getPrezzoNotte() {
         return prezzoNotte;
-    }
-
-    public int getDimensione() {
-        return dimensione;
-    }
-
-    public TariffaStagionale getTf() {
-        return tf;
     }
 
     public ArrayList<Servizio> getListaServizi() {
@@ -78,7 +65,7 @@ public class CasaVacanze extends Struttura {
         }
     }
 
-    public void aggiornaStruttura(String nome, String descrizione, ArrayList<Servizio> listserv){
+    public void aggiornaStruttura(String nome, String descrizione, ArrayList<Servizio> listserv, float prezzoNotte){
         if(nome!=null)
         setNome(nome);
 
@@ -90,6 +77,14 @@ public class CasaVacanze extends Struttura {
                 listaServizi.addAll(listserv);
             }
         }
+        if(prezzoNotte != 0){
+            this.prezzoNotte = prezzoNotte;
+        }
+    }
+
+
+    public void addPrenotazione(Prenotazione pren){
+        listaprenotazioni.put(pren.getId(),pren);
     }
 
 

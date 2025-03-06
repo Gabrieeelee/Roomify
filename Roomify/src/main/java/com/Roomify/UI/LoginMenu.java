@@ -1,8 +1,6 @@
 package com.Roomify.UI;
 
-import com.Roomify.Exception.LogException;
 import com.Roomify.*;
-import com.Roomify.Exception.LoginClienteException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +25,7 @@ public class LoginMenu extends Menu  {
     }
 
     @Override
-    void processaScelta(int scelta) throws Exception {
+    void processaScelta(int scelta)  {
         switch (scelta) {
             case 1:
                 accedi();
@@ -45,7 +43,7 @@ public class LoginMenu extends Menu  {
         System.out.println("finito");
     }
 
-    private static void accedi() throws Exception {
+    private static void accedi()  {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Inserisci il tuo identificativo:");
@@ -81,7 +79,7 @@ public class LoginMenu extends Menu  {
     }
 
     //funziona
-    private  void registrati() throws LogException {
+    private  void registrati() {
         LocalDate data = null;
         Scanner scanner = new Scanner(System.in);
 
@@ -161,7 +159,7 @@ public class LoginMenu extends Menu  {
                 }else{
                     System.out.println("Non hai confermato");
                 }
-
+                    break;
             case 2:
                 if(!sistema.registrazioneCliente(nome, cognome, data, cf, email, ntelefono)){
                     goToMenu("Sei gia registrato come Cliente, puoi avere un solo account intestato a te!");
@@ -176,7 +174,7 @@ public class LoginMenu extends Menu  {
                 }else{
                     System.out.println("Non hai confermato");
                 }
-
+                break;
             case 3:
                 System.out.println("Inserisci il numero di licenza:");
                 int nlicenza = scanner.nextInt();
@@ -194,7 +192,7 @@ public class LoginMenu extends Menu  {
                 }else{
                     System.out.println("Non hai confermato");
                 }
-
+                break;
             default:
                 System.out.println("Tipo di utente non valido.");
                 return;
@@ -202,7 +200,7 @@ public class LoginMenu extends Menu  {
 
     }
 
-    public void chiudi() throws LogException {
+    public void chiudi()  {
       System.exit(0);
     }
 

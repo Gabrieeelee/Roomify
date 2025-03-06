@@ -25,10 +25,9 @@ public class Servizio {
 
     @Override
     public String toString() {
-        return "Servizio{" +
-                "codice=" + codice +
-                ", nome='" + nome + '\'' +
-                ", descrizione='" + descrizione + '\'' +
-                '}';
+        return "Servizio:" +
+                "\n|Codice=" + codice +
+                "\n|Nome='" + nome + '\'' +
+                "\n|Descrizione='" + descrizione;
     }
 }

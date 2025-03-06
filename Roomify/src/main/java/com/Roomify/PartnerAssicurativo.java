@@ -19,15 +19,11 @@ public class PartnerAssicurativo extends Utente {
         lPAssCorrente = new ArrayList<>();
     }
 
-    public int getNlicenza() {
-        return nlicenza;
-    }
-
     public Map<Integer, PolizzaAssicurativa> getListapolizze() {
         return listapolizze;
     }
 
-    public void inseriNuovaPolizza(int id, String tipo, String copertura, int durata, String stato){
+    public void inseriNuovaPolizza( String tipo, String copertura, int durata, String stato){
         lPAssCorrente.add(new PolizzaAssicurativa(generaNumeroId(), tipo, copertura, durata, stato,this));
     }
 

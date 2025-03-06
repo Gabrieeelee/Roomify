@@ -1,5 +1,6 @@
 package com.Roomify.UI;
 
+import com.Roomify.Assistenza.CategoriaAssistenza;
 import com.Roomify.Assistenza.RichiestaAssistenza;
 
 import java.util.Map;
@@ -14,10 +15,10 @@ public class MenuAmministratore extends Menu{
     }
 
     @Override
-    void processaScelta(int scelta) throws Exception {
+    void processaScelta(int scelta)  {
         switch (scelta){
             case 1:
-                selezionaRAssistenza();
+                risolviAssistenza();
                 break;
             case 7:
                 logout();
@@ -30,16 +31,20 @@ public class MenuAmministratore extends Menu{
 
     }
 
-    public void selezionaRAssistenza(){
-        Map<Integer, RichiestaAssistenza> map = sistema.getListaAssistenza();
-        Scanner scanner = new Scanner(System.in);
-        for(RichiestaAssistenza ra : map.values()){
-            if(!ra.getStato().equals("Chiuso")){
-                System.out.println(ra.toString());
-            }else{
-                goToMenu("Non esistono assistenze");
+    public void risolviAssistenza(){
+        Map<Integer, RichiestaAssistenza> map=  sistema.risolviAssistenza();
+        if(map.isEmpty()){
+            goToMenu("Non esistono assistenze");
+        } else{
+            for(RichiestaAssistenza richiesta: map.values()){
+                richiesta.mostraDettagli();
             }
         }
+        selezionaRAssistenza(map);
+    }
+
+    public void selezionaRAssistenza(Map<Integer, RichiestaAssistenza> map){
+        Scanner scanner = new Scanner(System.in);
         int id = 0;
         while(true){
             System.out.println("Inserisci id dell'assistenza");

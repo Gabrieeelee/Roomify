@@ -13,7 +13,6 @@ public abstract class Struttura {
     private String indirizzo;
     private Host proprietario;
     private ArrayList<Recensione> listRecensioni;
-    //private TariffaStagionale tf;
     private ArrayList<TariffaStagionale> listatf;
 
     public Struttura(int id, String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo, Host proprietario) {
@@ -59,60 +58,40 @@ public abstract class Struttura {
         return paese;
     }
 
-    public void setPaese(String paese) {
-        this.paese = paese;
-    }
-
     public String getCitta() {
         return citta;
-    }
-
-    public void setCitta(String citta) {
-        this.citta = citta;
     }
 
     public String getProvincia() {
         return provincia;
     }
 
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
-    }
-
-    public int getCap() {
-        return cap;
-    }
-
-    public void setCap(int cap) {
-        this.cap = cap;
-    }
-
     public String getIndirizzo() {
         return indirizzo;
-    }
-
-    public void setIndirizzo(String indirizzo) {
-        this.indirizzo = indirizzo;
     }
 
     public void addRecensione(Recensione re){
         listRecensioni.add(re);
     }
 
+    public boolean equalsCitta(String citta){
+        if(this.citta.equals(citta)){
+            return true;
+        } else return false;
+    }
 
     @Override
     public String toString() {
-        return "Struttura{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", descrizione='" + descrizione + '\'' +
-                ", paese='" + paese + '\'' +
-                ", citta='" + citta + '\'' +
-                ", provincia='" + provincia + '\'' +
-                ", cap=" + cap +
-                ", indirizzo='" + indirizzo + '\'' +
-                ", proprietario=" + proprietario +
-                '}';
+        return "Struttura:" +
+                "\n|ID=" + id +
+                "\n|Nome='" + nome + '\'' +
+                "\n|Descrizione='" + descrizione + '\'' +
+                "\n|Paese='" + paese + '\'' +
+                "\n|Citta='" + citta + '\'' +
+                "\n|Provincia='" + provincia + '\'' +
+                "\n|Cap=" + cap +
+                "\n|Indirizzo='" + indirizzo + '\'' +
+                "\n|Proprietario=" + proprietario.getNome();
     }
 
     public ArrayList<Recensione> getListRecensioni() {
@@ -147,4 +126,6 @@ public abstract class Struttura {
     public ArrayList<TariffaStagionale> getListatf() {
         return listatf;
     }
+
+
 }

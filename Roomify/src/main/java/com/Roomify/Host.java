@@ -2,6 +2,7 @@ package com.Roomify;
 
 import com.Roomify.Assistenza.CategoriaAssistenza;
 import com.Roomify.Assistenza.RichiestaAssistenza;
+import com.Roomify.Assistenza.RichiestaAssistenzaCreator;
 import com.Roomify.Assistenza.RichiestaAssistenzaFactory;
 
 import java.time.LocalDate;
@@ -13,6 +14,8 @@ public class Host extends Utente{
     private String sedefiscale;
     private Map<Integer,Struttura> listaStrutture;
     private Sottoscrizione sottoscrizione;
+    private Map<Integer,Prenotazione> listPrenotazioneDisp;
+    private ArrayList<Recensione> listaRecensioniDisp;
 
     public Host(int id,String nome, String cognome, LocalDate dataDiNascita, String codicefiscale, String email, String telefono, String piva, String paesediresidenza, String sedefiscale) {
         super(id,nome, cognome, dataDiNascita, codicefiscale, email, telefono);
@@ -21,6 +24,10 @@ public class Host extends Utente{
         this.sedefiscale = sedefiscale;
         this.listaStrutture=new HashMap<>();
         sottoscrizione=null;
+    }
+
+    public void addStruttura(Struttura struttura){
+        listaStrutture.put(struttura.getId(),struttura);
     }
 
     public ArrayList<Recensione> visualizzaRecensioni(){
@@ -44,51 +51,47 @@ public class Host extends Utente{
        sottoscrizione=new Sottoscrizione(abbonamento.getId(), abbonamento.getNome(), LocalDate.now(), LocalDate.now().plusMonths(abbonamento.getDurata()), abbonamento);
     }
 
-    public RichiestaAssistenza richiestaAssistenzaPrenotazione(int idAss,String descrizione, int id,String stato){
-        Prenotazione pre=null;
-        for(Struttura struttura : listaStrutture.values()){
-            if(struttura instanceof  CasaVacanze){
-                if(((CasaVacanze) struttura).getListaprenotazioni().get(id) != null){
-                    pre = ((CasaVacanze) struttura).getListaprenotazioni().get(id);
-                    break;
-                }
-            } else {
-              Map<String, Stanza> stn =  ((Beb)struttura).getListaStanze();
-              for(Stanza st : stn.values()){
-                  if(st.getListaprenotazioni().get(id) != null){
-                      pre = st.getListaprenotazioni().get(id);
-                      break;
-                  }
-              }
-            }
-        }
-        RichiestaAssistenzaFactory factoryPrenotazione = RichiestaAssistenzaFactory.creaFactory(CategoriaAssistenza.PRENOTAZIONE);
-        Random random=new Random();
-
-        RichiestaAssistenza richiesta1 = factoryPrenotazione.creaRichiesta(idAss,descrizione,stato, this, pre, null);
-        setRichiestaAssistenzacorr(richiesta1);
-        return richiesta1;
-    }
-
-    public RichiestaAssistenza richiestaAssistenzaRecensione(int idAss,String descrizione, int id,String stato){
-        Recensione rec=null;
-        for(Struttura struttura : listaStrutture.values()){
-           ArrayList<Recensione>listRe =struttura.getListRecensioni();
-           for (int i = 0; i < listRe.size(); i++){
-               if(listRe.get(i).getId() == id){
-                   rec = listRe.get(i);
-               }
-           }
-        }
-        RichiestaAssistenzaFactory factoryPrenotazione = RichiestaAssistenzaFactory.creaFactory(CategoriaAssistenza.RECENSIONE);
-        RichiestaAssistenza richiesta1 = factoryPrenotazione.creaRichiesta(idAss,descrizione,stato, this, null, rec);
-        setRichiestaAssistenzacorr(richiesta1);
-        return richiesta1;
-    }
-
     public Sottoscrizione getSottoscrizione(){
         return this.sottoscrizione;
     }
 
+    public Map<Integer, Prenotazione> getListaPrenotazioni(){
+        listPrenotazioneDisp = new HashMap<>();
+        for (Struttura st : listaStrutture.values()){
+            if (st instanceof CasaVacanze){
+                listPrenotazioneDisp.putAll(((CasaVacanze)st).getListaprenotazioni());
+            }else if (st instanceof Beb){
+                Map<String, Stanza> mapStanze= ((Beb)st).getListaStanze();
+                for (Stanza stn : mapStanze.values()){
+                    listPrenotazioneDisp.putAll(stn.getListaprenotazioni());
+                }
+
+            }
+        }
+        return listPrenotazioneDisp;
+    }
+
+    public Prenotazione getListPrenotazioneDisp(int idPren) {
+        return listPrenotazioneDisp.get(idPren);
+    }
+
+    public ArrayList<Recensione> getListaRecensioni(){
+        listaRecensioniDisp = new ArrayList<>();
+        for (Struttura st : listaStrutture.values()){
+            listaRecensioniDisp.addAll(st.getListRecensioni());
+        }
+        return listaRecensioniDisp;
+    }
+
+    public Recensione selRecensione(int idRec) {
+        Recensione re = null;
+        for (int i = 0; i < listaRecensioniDisp.size(); i++){
+            if (listaRecensioniDisp.get(i).getId() == idRec){
+                re = listaRecensioniDisp.get(i);
+            }
+        }
+        listaRecensioniDisp = null;
+        return re;
+    }
 
 }

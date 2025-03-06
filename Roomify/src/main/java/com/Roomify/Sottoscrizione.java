@@ -21,14 +21,6 @@ public class Sottoscrizione {
         return id;
     }
 
-    public LocalDate getDatainizio() {
-        return datainizio;
-    }
-
-    public LocalDate getDatafine() {
-        return datafine;
-    }
-
     public String getNome(){
         return this.nome;
     }

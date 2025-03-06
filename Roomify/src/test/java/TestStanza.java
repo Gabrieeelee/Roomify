@@ -12,37 +12,43 @@ import static org.junit.Assert.*;
 
 public class TestStanza {
 
+    private Beb be;
+    private CasaVacanze cv;
+    private Cliente cl;
+    private Host ho;
+    private Prenotazione pre;
+    @Before
+    public void initMet() {
+        be = new Beb(23, "Villa fontana", "Mi piaccciono le fontane", "Italia", "Acate", "RG", 29, "VIA PISILLI 29",ho);
+        ho = new Host(2, "Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228", "123123123", "IT", "Via Francesco II");
+        cl = new Cliente(1, "Gabriele", "Florio", LocalDate.of(2001, 6, 3), "FLR", "email2@test.com", "228");
+        pre = new Prenotazione(123, LocalDate.of(2024, 3, 1), LocalDate.of(2024, 3, 15), "Attivo", 2, cv, cl);
+        cl.addPrenotazione(pre);
+    }
+
     @Test
     public void testAddPrenotazione(){
-
-        Cliente cl=new Cliente(1,"Enricomaria","florio",LocalDate.of(2020,11,5),"ojsdfng","asd@sdf.com","123123123");
-
-
-        Beb beb=new Beb( 5, "B&B Il Glicine", "Struttura romantica con colazione inclusa", "Italia", "Firenze", "FI", 50100, "Piazza della Signoria 7",new Host(4,"Marco", "Rossi", LocalDate.of(1988, 2, 14), "MRO", "marco.host@test.com", "56789", "3498765432", "IT", "Via Veneto 12"));
-        Stanza stanza = new Stanza(1,"luxury1",3,111,100,"bellissima",new ArrayList<>(),beb);
-        Prenotazione pre= new Prenotazione(1,LocalDate.of(2020,10,10),LocalDate.of(2020,10,15),"prenotata",stanza,cl);
-
-        stanza.addPrenotazione(pre);
-        assertNotNull(stanza.getListaprenotazioni());
+       Stanza stanza = new Stanza(1,"luxury1",3,111,100,"bellissima",new ArrayList<>(),be);
+       pre = new Prenotazione(123, LocalDate.of(2024, 3, 1), LocalDate.of(2024, 3, 15), "Attivo", 2, be,stanza, cl);
+       stanza.addPrenotazione(pre);
+       assertEquals(1,stanza.getListaprenotazioni().size());
     }
 
     @Test
     public void testIsAvailable(){
-
-        Cliente cl=new Cliente(1,"Enricomaria","florio",LocalDate.of(2020,11,5),"ojsdfng","asd@sdf.com","123123123");
-        Beb beb=new Beb( 5, "B&B Il Glicine", "Struttura romantica con colazione inclusa", "Italia", "Firenze", "FI", 50100, "Piazza della Signoria 7",new Host(4,"Marco", "Rossi", LocalDate.of(1988, 2, 14), "MRO", "marco.host@test.com", "56789", "3498765432", "IT", "Via Veneto 12"));
-        Stanza stanza = new Stanza(1,"luxury1",3,111,100,"bellissima",new ArrayList<>(),beb);
-        Prenotazione pre= new Prenotazione(1,LocalDate.of(2020,10,10),LocalDate.of(2020,10,15),"prenotata",stanza,cl);
+        Stanza stanza = new Stanza(1,"luxury1",3,111,100,"bellissima",new ArrayList<>(),be);
+        pre = new Prenotazione(123, LocalDate.of(2024, 3, 1), LocalDate.of(2024, 3, 15), "Attivo", 2, be,stanza, cl);
         stanza.addPrenotazione(pre);
+        assertNull(stanza.isAvailable( LocalDate.of(2024, 3, 1), LocalDate.of(2024, 3, 10),2));
+        assertNotNull(stanza.isAvailable( LocalDate.of(2025, 3, 1), LocalDate.of(2025, 3, 10),2));
+        assertNull(stanza.isAvailable( LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 10),10));
+    }
 
-        Stanza stanzanuova = new Stanza(2,"luxury13",30,111,100,"bellissima",new ArrayList<>(),beb);
-
-
-        Stanza stanza2=stanza.isAvailable(LocalDate.of(2020,10,10),LocalDate.of(2020,10,15),3);
-        Stanza stanza3=stanzanuova.isAvailable(LocalDate.of(2020,10,10),LocalDate.of(2020,10,15),5);
-        assertEquals("luxury4",stanza3.getNome());
-        assertNull(stanza2);
-
-
+    @Test
+    public void testsetInfo(){
+        Stanza stanza = new Stanza(1,"luxury1",3,111,100,"bellissima",new ArrayList<>(),be);
+        assertEquals("luxury1",stanza.getNome());
+        stanza.setInfo("prova",null,null,0);
+        assertEquals("prova",stanza.getNome());
     }
 }

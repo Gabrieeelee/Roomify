@@ -35,21 +35,27 @@ import java.util.ArrayList;
         public void addMessaggio(Messaggio mess){
             listaMessaggi.add(mess);
         }
+
         public abstract void mostraDettagli();
 
         public ArrayList<Messaggio> getListaMessaggi() {
             return listaMessaggi;
         }
 
+        public boolean isntRisolta(){
+            if(this.stato.equals("Chiuso"))
+                return false;
+            else
+                return true;
+        }
+
 
         @Override
         public String toString() {
-            return "RichiestaAssistenza{" +
-                    "id=" + id +
-                    ", descrizione='" + descrizione + '\'' +
-                    ", utente=" + utente +
-                    ", stato='" + stato + '\'' +
-                    ", listaMessaggi=" + listaMessaggi +
-                    '}';
+            return "Richiesta Assistenza:" +
+                    "\n|ID=" + id +
+                    "\n|Descrizione='" + descrizione + '\'' +
+                    "\n|Stato='" + stato + '\'';
+
         }
     }

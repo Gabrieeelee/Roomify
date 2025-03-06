@@ -21,18 +21,6 @@ public class PolizzaAssicurativa {
         return id;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public String getCopertura() {
-        return copertura;
-    }
-
-    public int getDurata() {
-        return durata;
-    }
-
     public String getStato() {
         return stato;
     }
@@ -42,7 +30,7 @@ public class PolizzaAssicurativa {
     }
 
     public boolean isOk(int durata) {
-        if (durata <= this.durata){
+        if (durata <= this.durata && !stato.equals("Disattivato")){
             return true;
         }
 
@@ -55,13 +43,10 @@ public class PolizzaAssicurativa {
 
     @Override
     public String toString() {
-        return "PolizzaAssicurativa{" +
-                "id=" + id +
-                ", tipo='" + tipo + '\'' +
-                ", copertura='" + copertura + '\'' +
-                ", durata=" + durata +
-                ", stato='" + stato + '\'' +
-                ", partnerAssicurativo=" + partnerAssicurativo +
-                '}';
+        return "Polizza Assicurativa\n" +
+                "|ID=" + id +
+                "\n|Tipo='" + tipo + '\'' +
+                "\n|Copertura='" + copertura + '\'' +
+                "\n|Durata=" + durata + '\'';
     }
 }

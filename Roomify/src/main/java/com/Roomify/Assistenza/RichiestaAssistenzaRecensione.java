@@ -13,8 +13,10 @@ public class RichiestaAssistenzaRecensione extends RichiestaAssistenza {
 
     @Override
     public void mostraDettagli() {
-        System.out.println("Richiesta Assistenza per Recensione");
-        System.out.println("Descrizione: " + descrizione);
-        System.out.println("Recensione ID: " + recensione.getId());
+        System.out.print("\nRichiesta Assistenza per Recensione");
+        System.out.print("\n|ID:" + id);
+        System.out.print("\n|Descrizione: " + descrizione);
+        System.out.print("\n|Stato: "+ stato);
+        System.out.print("\n|Recensione ID: " + recensione.getId()+"\n");
     }
 }

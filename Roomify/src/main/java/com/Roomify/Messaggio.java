@@ -13,4 +13,9 @@ public class Messaggio {
         return descrizione;
     }
 
+    @Override
+    public String toString() {
+        return "Messaggio: \n|ID: "+id+
+                "\n|Descrizione: "+ descrizione;
+    }
 }

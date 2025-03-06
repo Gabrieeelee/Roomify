@@ -15,11 +15,6 @@
         private Stanza stanzaCorrente;
 
 
-
-        public void setStanzaCorrente(Stanza stanzaCorrente) {
-            this.stanzaCorrente = stanzaCorrente;
-        }
-
         public Beb(int id, String nome, String descrizione, String paese, String citta, String provincia, int cap, String indirizzo, Host proprietario) {
             super(id, nome, descrizione, paese, citta, provincia, cap, indirizzo,proprietario);
             this.listaStanze = new HashMap<>();
@@ -64,9 +59,20 @@
             return stanzaCorrente;
         }
 
-        public void modStanza(String nome, String descrizione, ArrayList<Servizio> listSer){
+        public Stanza   selStanza(int id){
+            String nome="";
+            for(Stanza stanza : listaStanze.values()){
+                if(stanza.getId()==id){
+                    nome = stanza.getNome();
+                }
+            }
+            stanzaCorrente = listaStanze.get(nome);
+            return stanzaCorrente;
+        }
+
+        public void modStanza(String nome, String descrizione, ArrayList<Servizio> listSer, float prezzopernotte){
             listaStanze.remove(stanzaCorrente.getNome());
-            stanzaCorrente.setInfo(nome, descrizione, listSer);
+            stanzaCorrente.setInfo(nome, descrizione, listSer, prezzopernotte);
             listaStanze.put(stanzaCorrente.getNome(), stanzaCorrente);
         }
 
@@ -77,6 +83,13 @@
             }
             return mapPrenotazione;
         }
+
+        public void addPrenotazione(Prenotazione pren){
+
+                stanzaCorrente.addPrenotazione(pren);
+
+        }
+
     }
 
 

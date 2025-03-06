@@ -42,4 +42,13 @@ public class Abbonamento {
     public int getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Abbonamento:" +
+                "\n|ID=" + id +
+                "\n|Nome='" + nome + '\'' +
+                "\n|Durata=" + durata +
+                "\n|Costo=" + costo ;
+    }
 }
